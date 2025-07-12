@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="pomodoro-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Pomodoro Timer</title>
+</head>
+<body>
+
+  <div class="timer-container">
+    <div class="mode-buttons">
+      <button id="pomodoroBtn" class="active">pomodoro</button>
+      <button id="shortBreakBtn">short break</button>
+      <button id="longBreakBtn">long break</button>
+    </div>
+
+    <div class="time-display" id="time">25:00</div>
+    <div class="interval-counter">intervals completed: <span id="intervalCount">0</span></div>
+
+    <div class="control-row">
+      <button class="control-icon" onclick="openSettings()"><i class="fa-solid fa-gear"></i></button>
+      <button id="start-timer" onclick="startTimer()" onmousedown="mouseclick.play()">start timer!</button>
+      <button class="control-icon" onclick="resetTimer()"><i class="fa-solid fa-rotate"></i></button>
+    </div>
+
+    <div class="todo-container">
+      <h2 class="todo-title">your to-do list...</h2>
+
+      <div class="todo-header">
+        <div class="todo-col">status</div>
+        <div class="todo-col">task</div>
+        <div class="todo-col">time</div>
+        <div class="todo-col">delete</div>
+      </div>
+
+      <div id="todo-task-list-container">
+        <div id="todo-task-list"></div>
+        <div class="todo-row add-task">
+          <div class="todo-add" id="addTaskBtn"><i class="fa-solid fa-plus"></i> add task</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let timer;
+    let timeLeft = 25 * 60;
+    let isRunning = false;
+    let currentMode = 'pomodoro';
+    let intervalsCompleted = 0;
+
+    const taskList = document.getElementById('todo-task-list');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const intervalCount = document.getElementById('intervalCount');
+
+    var mouseclick = new Audio();
+    mouseclick.src = "https://uploads.sitepoint.com/wp-content/uploads/2023/06/1687569402mixkit-fast-double-click-on-mouse-275.wav";
+
+    addTaskBtn.addEventListener('click', () => {
+      const newTask = document.createElement('div');
+      newTask.className = 'todo-row';
+
+      newTask.innerHTML = `
+        <div class="todo-status">
+          <select class="status-select">
+            <option value="not yet done">not yet done</option>
+            <option value="in progress" selected>in progress</option>
+            <option value="almost done">almost done</option>
+            <option value="completed">completed</option>
+          </select>
+        </div>
+        <div class="todo-task">
+          <input type="text" placeholder="Task name" class="task-input" />
+        </div>
+        <div class="todo-time">
+          <input type="number" placeholder="Hours" class="time-input" min="1" />
+        </div>
+        <div class="todo-delete">
+          <button class="delete-task-btn"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `;
+
+      taskList.appendChild(newTask);
+    });
+
+    // Handle task deletion
+    taskList.addEventListener('click', (e) => {
+      if (e.target.closest('.delete-task-btn')) {
+        const taskRow = e.target.closest('.todo-row');
+        if (taskRow) taskRow.remove();
+      }
+    });
+
+    // Handle manual status change
+    taskList.addEventListener('change', (e) => {
+      if (e.target.classList.contains('status-select')) {
+        const row = e.target.closest('.todo-row');
+        if (e.target.value === 'completed') {
+          row.classList.add('completed');
+        } else {
+          row.classList.remove('completed');
+        }
+      }
+    });
+
+    function updateTime() {
+      const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+      const seconds = (timeLeft % 60).toString().padStart(2, '0');
+      document.getElementById('time').textContent = `${minutes}:${seconds}`;
+    }
+
+    function startTimer() {
+      const startBtn = document.getElementById('start-timer');
+
+      if (!isRunning) {
+        isRunning = true;
+        startBtn.textContent = 'stop timer!';
+        timer = setInterval(() => {
+          if (timeLeft > 0) {
+            timeLeft--;
+            updateTime();
+          } else {
+            clearInterval(timer);
+            isRunning = false;
+            startBtn.textContent = 'start timer!';
+            alert("Time's up!");
+            intervalsCompleted++;
+            intervalCount.textContent = intervalsCompleted;
+            checkTasksCompletion();
+          }
+        }, 1000);
+      } else {
+        clearInterval(timer);
+        isRunning = false;
+        startBtn.textContent = 'start timer!';
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      setTimeByMode(currentMode);
+      updateTime();
+      isRunning = false;
+      document.getElementById('start-timer').textContent = 'start timer!';
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.mode-buttons button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(mode + 'Btn').classList.add('active');
+      setTimeByMode(mode);
+      updateTime();
+    }
+
+    function setTimeByMode(mode) {
+      if (mode === 'pomodoro') timeLeft = 25 * 60;
+      else if (mode === 'shortBreak') timeLeft = 5 * 60;
+      else if (mode === 'longBreak') timeLeft = 15 * 60;
+    }
+
+    function openSettings() {
+      alert("Settings panel is under construction.");
+    }
+
+    function checkTasksCompletion() {
+      const tasks = document.querySelectorAll('#todo-task-list .todo-row');
+      const minutesCompleted = intervalsCompleted * 25;
+
+      tasks.forEach(task => {
+        const timeInput = task.querySelector('.time-input');
+        const statusSelect = task.querySelector('.status-select');
+
+        if (timeInput && statusSelect) {
+          const targetHours = parseFloat(timeInput.value);
+          const requiredMinutes = targetHours * 60;
+
+          if (!isNaN(targetHours) && minutesCompleted >= requiredMinutes) {
+            statusSelect.value = 'completed';
+            task.classList.add('completed');
+          }
+        }
+      });
+    }
+
+    document.getElementById('pomodoroBtn').onclick = () => setMode('pomodoro');
+    document.getElementById('shortBreakBtn').onclick = () => setMode('shortBreak');
+    document.getElementById('longBreakBtn').onclick = () => setMode('longBreak');
+
+    updateTime();
+  </script>
+</body>
+</html>
