@@ -339,7 +339,6 @@ body {
   outline-offset: 5px;
   border-radius: 50%;
   animation: bounceActive 0.5s ease;
-  background-color: transparent;
   color: inherit;
 }
 
