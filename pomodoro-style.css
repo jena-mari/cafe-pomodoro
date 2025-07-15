@@ -326,7 +326,8 @@ body {
   color: inherit;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
+  
   -webkit-mask-image: url('./flower-mask.svg');
   mask-image: url('./flower-mask.svg');
   -webkit-mask-repeat: no-repeat;
@@ -335,14 +336,33 @@ body {
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
+
+  /* Subtle animation when hovered */
+  will-change: transform;
+}
+
+.theme-btn:hover {
+  transform: rotate(10deg) scale(1.1);
+}
+
+.theme-btn:active {
+  transform: scale(0.95);
 }
 
 .theme-btn.active {
   outline: 2px solid currentColor;
   outline-offset: 5px;
   border-radius: 50%;
+  animation: bounceActive 0.4s ease;
 }
 
+/* Keyframes for bounce animation */
+@keyframes bounceActive {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.2); }
+  60%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
 /* ============================
    Timer Settings Inputs
 ============================ */
