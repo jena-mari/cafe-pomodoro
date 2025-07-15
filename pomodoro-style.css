@@ -293,7 +293,7 @@ body {
   border-radius: 1.5rem;
   padding: 2rem;
   z-index: 10;
-  width: 400px;
+  width: 600px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   font-family: var(--font);
   color: var(--accent-bg);
