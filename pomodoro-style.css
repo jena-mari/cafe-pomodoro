@@ -339,6 +339,8 @@ body {
   outline-offset: 5px;
   border-radius: 50%;
   animation: bounceActive 0.5s ease;
+  background-color: transparent;
+  color: inherit;
 }
 
 @keyframes bounceActive {
@@ -358,9 +360,10 @@ body {
 
 .theme-options {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
 .theme-item {
@@ -370,11 +373,11 @@ body {
 }
 
 .theme-label {
-  margin-top: 0.3rem;
-  font-size: 0.85rem;
-  color: var(--accent-bg);
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  text-transform: capitalize;
+  font-family: var(--font);
+  text-transform: lowercase;
 }
 
 /* ============================
