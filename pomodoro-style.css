@@ -1,3 +1,6 @@
+/* ============================
+   Fonts
+============================ */
 @font-face {
   font-family: 'altehaasgrotesk';
   src: url('AlteHaasGroteskBold.ttf') format('truetype');
@@ -5,6 +8,9 @@
   font-style: normal;
 }
 
+/* ============================
+   Root Variables
+============================ */
 :root {
   --main-bg: #fff4e6;
   --accent-bg: #73411f;
@@ -13,8 +19,15 @@
   --btn-hover-bg: #73411f;
   --btn-text: #fff4e6;
   --font: 'altehaasgrotesk', sans-serif;
+
+  --todo-completed-bg: #d7bda6;
+  --todo-placeholder-color: #b4875c;
+  --todo-add-hover-bg: #f9e4cc;
 }
 
+/* ============================
+   Base Styles
+============================ */
 body {
   margin: 0;
   font-family: var(--font);
@@ -24,11 +37,18 @@ body {
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  height: auto;
   padding: 2rem;
   box-sizing: border-box;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+* {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+/* ============================
+   Timer Container
+============================ */
 .timer-container {
   background-color: var(--main-bg);
   border-radius: 1rem;
@@ -56,7 +76,7 @@ body {
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .mode-buttons button:hover {
@@ -66,7 +86,7 @@ body {
 
 .mode-buttons .active {
   background-color: var(--accent-bg);
-  color: #fff4e6;
+  color: var(--btn-text);
 }
 
 .time-display {
@@ -74,6 +94,13 @@ body {
   font-weight: bold;
   color: var(--accent-bg);
   margin: 1rem 0;
+}
+
+.interval-counter {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--accent-bg);
+  margin-bottom: 1rem;
 }
 
 .control-row {
@@ -85,6 +112,9 @@ body {
   flex-wrap: wrap;
 }
 
+/* ============================
+   Timer Controls
+============================ */
 #start-timer {
   background-color: var(--btn-bg);
   border: none;
@@ -94,12 +124,12 @@ body {
   font-size: 1rem;
   color: var(--btn-text);
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition: background-color 0.3s ease, transform 0.1s ease;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 #start-timer:hover {
-  background-color: #73411f;
+  background-color: var(--btn-hover-bg);
 }
 
 #start-timer:active {
@@ -107,8 +137,8 @@ body {
 }
 
 #start-timer.active {
-  background-color: #73411f;
-  color: #fff4e6;
+  background-color: var(--btn-hover-bg);
+  color: var(--btn-text);
 }
 
 .control-icon {
@@ -128,25 +158,16 @@ body {
   transform: scale(0.8);
 }
 
-.task-info {
-  margin-top: 1.5rem;
-}
-
-.task-info p {
-  margin: 0.3rem 0;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
+/* ============================
+   To-Do Container
+============================ */
 .todo-container {
   margin-top: 2rem;
-  background-color: #fff4e6;
+  background-color: var(--main-bg);
   border-radius: 1rem;
   padding: 1.5rem;
-  font-family: var(--font);
   max-width: 800px;
   width: 100%;
-  color: var(--accent-bg);
   box-sizing: border-box;
 }
 
@@ -157,26 +178,21 @@ body {
   color: var(--accent-bg);
 }
 
-.todo-header,
+.todo-list {
+  list-style: decimal inside;
+  padding: 0;
+}
+
+.todo-list li {
+  margin-bottom: 0.75rem;
+}
+
 .todo-row {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr auto;
   gap: 1rem;
   align-items: center;
   margin-bottom: 0.5rem;
-}
-
-.todo-header {
-  background-color: var(--accent-bg);
-  color: #fff4e6;
-  padding: 0.5rem;
-  border-radius: 0.6rem;
-  font-weight: bold;
-  text-transform: lowercase;
-  text-align: center;
-}
-
-.todo-row {
   border: 2px solid var(--accent-bg);
   border-radius: 1rem;
   padding: 0.5rem 1rem;
@@ -185,15 +201,9 @@ body {
 }
 
 .todo-row.completed {
-  background-color: #d7bda6;
-  border-color: #73411f;
+  background-color: var(--todo-completed-bg);
+  border-color: var(--accent-bg);
   opacity: 0.95;
-}
-
-#todo-task-list {
-  max-height: 300px;
-  overflow-y: auto;
-  padding-right: 5px;
 }
 
 .todo-add {
@@ -204,13 +214,16 @@ body {
   font-weight: bold;
   cursor: pointer;
   grid-column: span 3;
-  transition: background 0.2s ease;
+  transition: background 0.3s ease;
 }
 
 .todo-add:hover {
-  background-color: #f9e4cc;
+  background-color: var(--todo-add-hover-bg);
 }
 
+/* ============================
+   Inputs
+============================ */
 .task-input,
 .time-input {
   width: 90%;
@@ -219,13 +232,13 @@ body {
   border-radius: 0.5rem;
   font-family: var(--font);
   font-size: 1rem;
-  background-color: #fff4e6;
+  background-color: var(--main-bg);
   color: var(--accent-bg);
 }
 
 .task-input::placeholder,
 .time-input::placeholder {
-  color: #b4875c;
+  color: var(--todo-placeholder-color);
   font-style: italic;
 }
 
@@ -236,39 +249,18 @@ body {
   border-radius: 0.5rem;
   font-family: var(--font);
   font-size: 1rem;
-  background-color: #fff4e6;
+  background-color: var(--main-bg);
   color: var(--accent-bg);
 }
 
 .status-select option {
-  background-color: #fff4e6;
+  background-color: var(--main-bg);
   color: var(--accent-bg);
 }
 
-/* Mobile responsiveness */
-@media (max-width: 600px) {
-  .todo-header,
-  .todo-row {
-    grid-template-columns: 1fr;
-    text-align: left;
-  }
-
-  .todo-add {
-    font-size: 0.9rem;
-    padding: 0.8rem;
-  }
-
-  .task-input,
-  .time-input,
-  .status-select {
-    width: 100%;
-  }
-
-  .time-display {
-    font-size: 6rem;
-  }
-}
-
+/* ============================
+   Delete Button
+============================ */
 .todo-delete {
   display: flex;
   justify-content: center;
@@ -288,9 +280,160 @@ body {
   color: #421704;
 }
 
-.interval-counter {
-  font-size: 1.2rem;
-  font-weight: bold;
+/* ============================
+   Settings Panel
+============================ */
+.settings-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--main-bg);
+  border: 4px solid var(--accent-bg);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  z-index: 10;
+  width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  font-family: var(--font);
   color: var(--accent-bg);
-  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  display: flex;
+}
+
+.settings-panel h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.theme-options {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.theme-btn {
+  width: 60px;
+  height: 60px;
+  background-color: currentColor;
+  color: inherit;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  -webkit-mask-image: url('./flower-mask.svg');
+  mask-image: url('./flower-mask.svg');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.theme-btn.active {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+  border-radius: 50%;
+}
+
+/* ============================
+   Timer Settings Inputs
+============================ */
+.timer-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.timer-inputs input {
+  width: 60px;
+  padding: 0.2rem;
+  font-size: 1rem;
+  text-align: center;
+  margin-left: 0.5rem;
+  border: 2px solid var(--accent-bg);
+  border-radius: 0.4rem;
+  background: var(--main-bg);
+  color: var(--accent-bg);
+}
+
+/* ============================
+   Settings Panel Buttons
+============================ */
+.settings-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.settings-buttons button {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  font-weight: bold;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: var(--font);
+}
+
+#resetBtn {
+  background: transparent;
+  border: 2px solid #a80000;
+  color: #a80000;
+}
+
+#resetBtn:hover {
+  background: #f5d6d6;
+}
+
+#closeSettings {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+}
+
+#closeSettings:hover {
+  background: var(--btn-hover-bg);
+}
+
+#saveBtn {
+  background: var(--accent-bg);
+  color: var(--btn-text);
+}
+
+#saveBtn:hover {
+  background: #421704;
+}
+
+/* ============================
+   Responsive
+============================ */
+@media (max-width: 600px) {
+  .todo-row {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .todo-add {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+
+  .task-input,
+  .time-input,
+  .status-select {
+    width: 100%;
+  }
+
+  .time-display {
+    font-size: 6rem;
+  }
 }
