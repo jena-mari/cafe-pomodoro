@@ -1,3 +1,4 @@
+
 (() => {
   const timerDisplay = document.getElementById('time');
   const startBtn = document.getElementById('start-timer');
@@ -168,18 +169,6 @@
     }
   }
 
-  function checkTasksCompletion() {
-    document.querySelectorAll('.todo-row').forEach(row => {
-      const timeInput = row.querySelector('.time-input');
-      const status = row.querySelector('.status-select');
-      if (timeInput && parseInt(timeInput.value) && intervalsCompleted >= parseInt(timeInput.value) * 2) {
-        status.value = 'completed';
-        row.classList.add('completed');
-      }
-    });
-    saveTasks(); // ensure status changes are saved
-  }
-
   function saveTasks() {
     const tasks = Array.from(document.querySelectorAll('.todo-row')).map(row => ({
       name: row.querySelector('.task-input').value,
@@ -189,78 +178,70 @@
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
 
-  function loadTasks() {
-    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    tasks.forEach(task => {
-      const newTask = document.createElement('div');
-      newTask.className = 'todo-row';
-      if (task.status === 'completed') newTask.classList.add('completed');
-      newTask.innerHTML = `
-        <div class="todo-status">
-          <select class="status-select">
-            <option value="in progress" ${task.status === 'in progress' ? 'selected' : ''}>in progress</option>
-            <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>completed</option>
-          </select>
-        </div>
-        <div class="todo-task">
-          <input type="text" placeholder="Task name" class="task-input" value="${task.name}" />
-        </div>
-        <div class="todo-time">
-          <input type="number" placeholder="Hours" class="time-input" min="1" value="${task.hours}" />
-        </div>
-        <div class="todo-delete">
-          <button class="delete-task-btn"><i class="fa-solid fa-trash"></i></button>
-        </div>`;
-      taskList.appendChild(newTask);
-
-      // Bind save listeners
-      newTask.querySelectorAll('input, select').forEach(el => {
-        el.addEventListener('change', () => {
-          newTask.classList.toggle('completed', newTask.querySelector('.status-select').value === 'completed');
-          saveTasks();
-        });
-      });
-    });
-  }
-
-  addTaskBtn.addEventListener('click', () => {
+  function createTaskRow(name = '', hours = '', status = 'in progress') {
     const newTask = document.createElement('div');
     newTask.className = 'todo-row';
+    if (status === 'completed') newTask.classList.add('completed');
+
     newTask.innerHTML = `
       <div class="todo-status">
         <select class="status-select">
-          <option value="in progress" selected>in progress</option>
-          <option value="completed">completed</option>
+          <option value="in progress" ${status === 'in progress' ? 'selected' : ''}>in progress</option>
+          <option value="completed" ${status === 'completed' ? 'selected' : ''}>completed</option>
         </select>
       </div>
       <div class="todo-task">
-        <input type="text" placeholder="Task name" class="task-input" />
+        <input type="text" placeholder="Task name" class="task-input" value="${name}" />
       </div>
       <div class="todo-time">
-        <input type="number" placeholder="Hours" class="time-input" min="1" />
+        <input type="number" placeholder="Hours" class="time-input" min="1" value="${hours}" />
       </div>
       <div class="todo-delete">
         <button class="delete-task-btn"><i class="fa-solid fa-trash"></i></button>
       </div>`;
-    taskList.appendChild(newTask);
-    saveTasks();
 
-    newTask.querySelectorAll('input, select').forEach(el => {
-      el.addEventListener('change', () => {
+    newTask.querySelectorAll('.task-input, .time-input, .status-select').forEach(input => {
+      input.addEventListener('input', () => {
         newTask.classList.toggle('completed', newTask.querySelector('.status-select').value === 'completed');
         saveTasks();
       });
     });
-  });
 
-  taskList.addEventListener('click', (e) => {
-    if (e.target.closest('.delete-task-btn')) {
-      const taskRow = e.target.closest('.todo-row');
-      taskRow?.remove();
+    newTask.querySelector('.delete-task-btn').addEventListener('click', () => {
+      newTask.remove();
       saveTasks();
-    }
+    });
+
+    return newTask;
+  }
+
+  function loadTasks() {
+    taskList.innerHTML = '';
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    tasks.forEach(task => {
+      const newTask = createTaskRow(task.name, task.hours, task.status);
+      taskList.appendChild(newTask);
+    });
+  }
+
+  function checkTasksCompletion() {
+    document.querySelectorAll('.todo-row').forEach(row => {
+      const timeInput = row.querySelector('.time-input');
+      const status = row.querySelector('.status-select');
+      if (timeInput && parseInt(timeInput.value) && intervalsCompleted >= parseInt(timeInput.value) * 2) {
+        status.value = 'completed';
+        row.classList.add('completed');
+      }
+    });
+  }
+
+  addTaskBtn.addEventListener('click', () => {
+    const newTask = createTaskRow();
+    taskList.appendChild(newTask);
+    saveTasks();
   });
 
+  // ... [rest of your event listeners and initialization code] ...
   document.getElementById('pomodoroBtn').addEventListener('click', () => setMode('pomodoro'));
   document.getElementById('shortBreakBtn').addEventListener('click', () => setMode('shortBreak'));
   document.getElementById('longBreakBtn').addEventListener('click', () => setMode('longBreak'));
@@ -321,5 +302,4 @@
   updateTime();
   applyTheme(storedTheme);
   loadTasks();
-  saveTasks(); // ensure initial load is stored
 })();
