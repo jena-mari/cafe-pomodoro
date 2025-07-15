@@ -177,6 +177,7 @@
         row.classList.add('completed');
       }
     });
+    saveTasks(); // ensure status changes are saved
   }
 
   function saveTasks() {
@@ -211,6 +212,14 @@
           <button class="delete-task-btn"><i class="fa-solid fa-trash"></i></button>
         </div>`;
       taskList.appendChild(newTask);
+
+      // Bind save listeners
+      newTask.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('change', () => {
+          newTask.classList.toggle('completed', newTask.querySelector('.status-select').value === 'completed');
+          saveTasks();
+        });
+      });
     });
   }
 
@@ -235,20 +244,19 @@
       </div>`;
     taskList.appendChild(newTask);
     saveTasks();
+
+    newTask.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('change', () => {
+        newTask.classList.toggle('completed', newTask.querySelector('.status-select').value === 'completed');
+        saveTasks();
+      });
+    });
   });
 
   taskList.addEventListener('click', (e) => {
     if (e.target.closest('.delete-task-btn')) {
       const taskRow = e.target.closest('.todo-row');
       taskRow?.remove();
-      saveTasks();
-    }
-  });
-
-  taskList.addEventListener('change', (e) => {
-    if (e.target.classList.contains('status-select') || e.target.classList.contains('task-input') || e.target.classList.contains('time-input')) {
-      const row = e.target.closest('.todo-row');
-      row.classList.toggle('completed', row.querySelector('.status-select').value === 'completed');
       saveTasks();
     }
   });
@@ -313,4 +321,5 @@
   updateTime();
   applyTheme(storedTheme);
   loadTasks();
+  saveTasks(); // ensure initial load is stored
 })();
