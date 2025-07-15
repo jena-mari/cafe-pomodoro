@@ -326,7 +326,7 @@ body {
   color: inherit;
   border: none;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
   -webkit-mask-image: url('./flower-mask.svg');
   mask-image: url('./flower-mask.svg');
   -webkit-mask-repeat: no-repeat;
