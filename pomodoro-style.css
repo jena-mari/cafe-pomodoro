@@ -43,8 +43,8 @@ body {
 .page-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  flex: 1 0 auto;
+  flex-grow: 1;
+  min-height: auto;
 }
 
 *, *::before, *::after {
@@ -58,13 +58,15 @@ body {
 .timer-container {
   background-color: var(--main-bg);
   border-radius: 1rem;
-  padding: 3rem 2rem;
+  padding: 1.5rem 1rem;
   width: 100%;
   max-width: 800px;
   text-align: center;
   box-sizing: border-box;
   flex: 1 0 auto;
   margin: 0 auto;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .mode-s {
@@ -104,7 +106,7 @@ button {
 }
 
 .time-display {
-  font-size: 10rem;
+  font-size: 6rem;
   font-weight: bold;
   color: var(--accent-bg);
   margin: 1rem 0;
