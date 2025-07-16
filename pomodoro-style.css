@@ -40,6 +40,7 @@ body {
   padding: 2rem;
   box-sizing: border-box;
   transition: background-color 0.4s ease, color 0.4s ease;
+  flex-direction: column;
 }
 
 * {
@@ -57,6 +58,7 @@ body {
   max-width: 800px;
   text-align: center;
   box-sizing: border-box;
+  flex: 1;
 }
 
 .mode-buttons {
@@ -479,8 +481,21 @@ body {
 ============================ */
 footer {
   text-align: center;
-  padding: 3px;
+  padding: 1em 0;
   font-family: var(--font);
+  font-size: 1em;
   background-color: var(--accent-bg);
+  border-top: 1px solid var(--accent-bg);
   color: var(--text-color);
+  margin-top: auto;
+}
+
+footer a {
+  color: var(--accent-bg);
+  text-decoration: none;
+  margin-left: 0.5em;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }
