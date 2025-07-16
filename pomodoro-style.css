@@ -484,14 +484,14 @@ footer {
   padding: 1em 0;
   font-family: var(--font);
   font-size: 1em;
-  background-color: var(--accent-bg);
+  background-color: var(--text-color);
   border-top: 1px solid var(--accent-bg);
   color: var(--text-color);
   margin-top: auto;
 }
 
 footer a {
-  color: var(--accent-bg);
+  color: var(--text-color);
   text-decoration: none;
   margin-left: 0.5em;
 }
