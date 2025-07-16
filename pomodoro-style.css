@@ -517,7 +517,7 @@ footer {
   font-family: var(--font);
   font-size: 1em;
   background-color: var(--main-bg); /* Light background */
-  border-top: 1px solid var(--accent-bg);
+  border-top: 0.3px solid var(--accent-bg);
   color: var(--accent-bg); /* Dark text */
   margin-top: auto;
   flex-shrink: 0;
