@@ -6,6 +6,7 @@
   src: url('AlteHaasGroteskBold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 
 /* ============================
@@ -43,8 +44,8 @@ body {
 .page-wrapper {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  min-height: auto;
+  min-height: 100vh;
+  flex: 1 0 auto;
 }
 
 *, *::before, *::after {
@@ -58,15 +59,13 @@ body {
 .timer-container {
   background-color: var(--main-bg);
   border-radius: 1rem;
-  padding: 1.5rem 1rem;
+  padding: 3rem 2rem;
   width: 100%;
   max-width: 800px;
   text-align: center;
   box-sizing: border-box;
   flex: 1 0 auto;
   margin: 0 auto;
-  max-height: 90vh;
-  overflow-y: auto;
 }
 
 .mode-s {
@@ -95,7 +94,7 @@ button {
   line-height: 1.2;
 }
 
-.mode-s :hover {
+.mode-s button:hover {
   background-color: var(--btn-hover-bg);
   color: var(--btn-text);
 }
@@ -106,7 +105,7 @@ button {
 }
 
 .time-display {
-  font-size: 6rem;
+  font-size: 10rem;
   font-weight: bold;
   color: var(--accent-bg);
   margin: 1rem 0;
@@ -281,9 +280,8 @@ select:focus {
   outline-offset: 3px;
 }
 
-
 /* ============================
-   Delete 
+   Delete
 ============================ */
 .todo-delete {
   display: flex;
@@ -311,7 +309,7 @@ select:focus {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.95);
   background: var(--main-bg);
   border: 4px solid var(--accent-bg);
   border-radius: 1.5rem;
@@ -325,7 +323,6 @@ select:focus {
   display: block;
   opacity: 0;
   visibility: hidden;
-  transform: translate(-50%, -50%) scale(0.95);
   pointer-events: none;
 }
 
@@ -347,6 +344,9 @@ select:focus {
   margin-bottom: 0.5rem;
 }
 
+/* ============================
+   Theme Buttons
+============================ */
 .theme-btn {
   width: 40px;
   height: 40px;
@@ -355,7 +355,6 @@ select:focus {
   border: none;
   cursor: pointer;
   transition: transform 0.3s ease;
-  
   -webkit-mask-image: url('./flower-mask.svg');
   mask-image: url('./flower-mask.svg');
   -webkit-mask-repeat: no-repeat;
@@ -364,8 +363,6 @@ select:focus {
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
-
-  /* Subtle animation when hovered */
   will-change: transform;
 }
 
@@ -438,15 +435,12 @@ select:focus {
 }
 
 /* ============================
-   Settings Panel s
+   Settings Panel Buttons
 ============================ */
 .settings-s {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
-}
-
-.settings-s  {
   flex: 1;
   padding: 0.5rem 0.8rem;
   font-weight: bold;
@@ -515,13 +509,13 @@ select:focus {
 ============================ */
 footer {
   text-align: center;
-  padding: 0.5em 0; 
+  padding: 0.5em 0;
   font-family: var(--font);
-  font-size: 0.8em; 
+  font-size: 0.8em;
   background-color: var(--main-bg);
-  border-top: 0.1px solid var(--accent-bg); /* Reduced border */
+  border-top: 0.1px solid var(--accent-bg);
   color: var(--accent-bg);
-  margin-top: 0; 
+  margin-top: 0;
   flex-shrink: 0;
   width: 100%;
 }
