@@ -67,6 +67,7 @@ body {
   flex: 1 0 auto;
   margin: 0 auto;
   margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .mode-s {
@@ -510,9 +511,9 @@ select:focus {
 ============================ */
 footer {
   text-align: center;
-  padding: 0.5em 0;
+  padding: 0.8em 0;
   font-family: var(--font);
-  font-size: 0.8em;
+  font-size: 1.0em;
   background-color: var(--main-bg);
   border-top: 0.1px solid var(--accent-bg);
   color: var(--accent-bg);
