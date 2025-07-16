@@ -30,6 +30,8 @@ font-style: normal;
 ============================ */
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
 }
@@ -51,8 +53,11 @@ box-sizing: border-box;
 transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
-.main-content {
+.page-wrapper {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* ============================
@@ -492,11 +497,14 @@ font-size: 6rem;
 
 /* ========== Footer ========== */
 footer {
-  background: var(--main-bg);
-  color: var(--accent-bg);
+  width: 100%;
   text-align: center;
   padding: 1em 0;
+  font-size: 0.9em;
+  background-color: var(--main-bg);
   border-top: 1px solid var(--accent-bg);
+  color: var(--accent-bg);
+  box-sizing: border-box;
 }
 
 footer a {
@@ -507,4 +515,13 @@ footer a {
 
 footer a:hover {
   text-decoration: underline;
+}
+
+footer p {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  flex-wrap: wrap;
 }
