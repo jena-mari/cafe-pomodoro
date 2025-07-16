@@ -424,11 +424,10 @@ body {
   gap: 0.5rem;
 }
 
-input:focus,
-select:focus,
-button:focus {
-  outline: 2px dashed var(--accent-bg);
-  outline-offset: 2px;
+input:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: none;
 }
 
 .settings-buttons button {
@@ -499,8 +498,8 @@ button:focus {
 footer {
   width: 100%;
   text-align: center;
-  padding: 1em 0;
-  font-size: 0.9em;
+  padding: 1.5em 0;
+  font-size: 1.0em;
   background-color: var(--main-bg);
   border-top: 1px solid var(--accent-bg);
   color: var(--accent-bg);
