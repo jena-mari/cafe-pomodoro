@@ -27,15 +27,18 @@
       intervals completed: <span id="intervalCount">0</span>
       </div>
   
-      <div class="control-row">
-      <button class="control-icon" onclick="openSettings()">
-      <i class="fa-solid fa-gear"></i>
-      </button>
-      <button id="start-timer" onclick="startTimer()" onmousedown="mouseclick.play()">start timer!</button>
-      <button class="control-icon" onclick="resetTimer()">
-      <i class="fa-solid fa-rotate"></i>
-      </button>
+        <div class="control-row">
+        <button class="control-icon" id="settingsBtn">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+          
+        <button id="start-timer">start timer!</button>
+        <button class="control-icon" id="resetBtnIcon">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+          
       </div>
+
   
       <div class="todo-container">
       <h2 class="todo-title">your to-do list...</h2>
