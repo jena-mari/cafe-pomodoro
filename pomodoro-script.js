@@ -246,9 +246,14 @@
   document.getElementById('shortBreakBtn').addEventListener('click', () => setMode('shortBreak'));
   document.getElementById('longBreakBtn').addEventListener('click', () => setMode('longBreak'));
 
-  document.getElementById('closeSettings').addEventListener('click', () => {
-    settingsPanel.style.display = 'none';
+  document.getElementById('settingsBtn').addEventListener('click', () => {
+    settingsPanel.classList.add('show');
   });
+  
+  document.getElementById('closeSettings').addEventListener('click', () => {
+    settingsPanel.classList.remove('show');
+  });
+
 
   document.getElementById('saveBtn').addEventListener('click', () => {
     timerDurations.pomo = parseInt(document.getElementById('pomodoroInput').value) || 25;
