@@ -473,3 +473,14 @@ body {
     font-size: 6rem;
   }
 }
+
+/* ============================
+   Footer Section
+============================ */
+footer {
+  text-align: center;
+  padding: 3px;
+  font-family: var(--font);
+  background-color: var(--accent-bg);
+  color: var(--text-color);
+}
