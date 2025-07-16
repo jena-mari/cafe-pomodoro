@@ -1,388 +1,479 @@
-/* ========== Fonts ========== */
+/* ============================
+  Fonts
+============================ */
 @font-face {
-  font-family: 'altehaasgrotesk';
-  src: url('AlteHaasGroteskBold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
+font-family: 'altehaasgrotesk';
+src: url('AlteHaasGroteskBold.ttf') format('truetype');
+font-weight: bold;
+font-style: normal;
 }
 
-/* ========== Variables ========== */
+/* ============================
+  Root Variables
+============================ */
 :root {
-  --main-bg: #fff4e6;
-  --accent-bg: #73411f;
-  --text-color: #73411f;
-  --btn-bg: #ab7843;
-  --btn-hover-bg: #73411f;
-  --btn-text: #fff4e6;
-  --font: 'altehaasgrotesk', sans-serif;
+--main-bg: #fff4e6;
+--accent-bg: #73411f;
+--text-color: #73411f;
+--btn-bg: #ab7843;
+--btn-hover-bg: #73411f;
+--btn-text: #fff4e6;
+--font: 'altehaasgrotesk', sans-serif;
 
-  --todo-completed-bg: #d7bda6;
-  --todo-placeholder-color: #b4875c;
-  --todo-add-hover-bg: #f9e4cc;
+--todo-completed-bg: #d7bda6;
+--todo-placeholder-color: #b4875c;
+--todo-add-hover-bg: #f9e4cc;
 }
 
-/* ========== Base ========== */
+/* ============================
+  Base Styles
+============================ */
 body {
-  margin: 0;
-  font-family: var(--font);
-  background-color: var(--accent-bg);
-  color: var(--text-color);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  -webkit-font-smoothing: antialiased;
+margin: 0;
+font-family: var(--font);
+background-color: var(--accent-bg);
+color: var(--text-color);
+display: flex;
+justify-content: center;
+align-items: flex-start;
+min-height: 100vh;
+padding: 2rem;
+box-sizing: border-box;
+transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+* {
+transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* ========== Timer ========== */
+/* ============================
+  Timer Container
+============================ */
 .timer-container {
-  background-color: var(--main-bg);
-  border-radius: 1rem;
-  padding: 3rem 2rem;
-  max-width: 800px;
-  margin: 2rem auto;
-  text-align: center;
+background-color: var(--main-bg);
+border-radius: 1rem;
+padding: 3rem 2rem;
+width: 100%;
+max-width: 800px;
+text-align: center;
+box-sizing: border-box;
 }
 
-.mode-s {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
+.mode-buttons {
+display: flex;
+justify-content: center;
+gap: 1rem;
+margin-bottom: 1.5rem;
+flex-wrap: wrap;
 }
 
 .mode-buttons button {
-  padding: 0.6rem 1.8rem;
-  border-radius: 2rem;
-  border: 3px solid var(--accent-bg);
-  background: none;
-  color: var(--accent-bg);
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
+padding: 0.6rem 1.8rem;
+border-radius: 2rem;
+border: 3px solid var(--accent-bg);
+background: none;
+color: var(--accent-bg);
+font-size: 1rem;
+font-weight: bold;
+cursor: pointer;
+transition: all 0.3s ease;
 }
 
 .mode-buttons button:hover {
-  background-color: var(--btn-hover-bg);
-  color: var(--btn-text);
+background-color: var(--btn-hover-bg);
+color: var(--btn-text);
 }
 
 .mode-buttons .active {
-  background-color: var(--accent-bg);
-  color: var(--btn-text);
+background-color: var(--accent-bg);
+color: var(--btn-text);
 }
 
 .time-display {
-  font-size: 10rem;
-  font-weight: bold;
-  color: var(--accent-bg);
-  margin: 1rem 0;
+font-size: 10rem;
+font-weight: bold;
+color: var(--accent-bg);
+margin: 1rem 0;
 }
 
 .interval-counter {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: var(--accent-bg);
+font-size: 1.2rem;
+font-weight: bold;
+color: var(--accent-bg);
+margin-bottom: 1rem;
 }
 
 .control-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 2rem;
+margin-bottom: 1rem;
+flex-wrap: wrap;
 }
 
-/* ========== Buttons ========== */
-button {
-  font-family: var(--font);
-  font-size: 1rem;
-}
-
+/* ============================
+  Timer Controls
+============================ */
 #start-timer {
-  background-color: var(--btn-bg);
-  border: none;
-  padding: 0.75rem 2.5rem;
-  border-radius: 999px;
-  font-weight: bold;
-  color: var(--btn-text);
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+background-color: var(--btn-bg);
+border: none;
+padding: 0.75rem 2.5rem;
+border-radius: 999px;
+font-weight: bold;
+font-size: 1rem;
+color: var(--btn-text);
+cursor: pointer;
+transition: background-color 0.3s ease, transform 0.1s ease;
+box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 #start-timer:hover {
-  background-color: var(--btn-hover-bg);
+background-color: var(--btn-hover-bg);
 }
 
 #start-timer:active {
-  transform: scale(0.97);
+transform: scale(0.97);
+}
+
+#start-timer.active {
+background-color: var(--btn-hover-bg);
+color: var(--btn-text);
 }
 
 .control-icon {
-  font-size: 2rem;
-  background: none;
-  border: none;
-  color: var(--accent-bg);
-  cursor: pointer;
+font-size: 2rem;
+background: none;
+border: none;
+color: var(--accent-bg);
+cursor: pointer;
+transition: transform 0.1s ease;
 }
 
-.control-icon:hover,
-.delete-task-btn:hover {
-  color: #421704;
+.control-icon:hover {
+color: #421704;
 }
 
 .control-icon:active {
-  transform: scale(0.9);
+transform: scale(0.8);
 }
 
-/* ========== To-Do ========== */
+/* ============================
+  To-Do Container
+============================ */
 .todo-container {
-  background-color: var(--main-bg);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  max-width: 800px;
-  width: 100%;
-  margin: 2rem auto;
+margin-top: 2rem;
+background-color: var(--main-bg);
+border-radius: 1rem;
+padding: 1.5rem;
+max-width: 800px;
+width: 100%;
+box-sizing: border-box;
 }
 
 .todo-title {
-  text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
+text-align: center;
+font-size: 1.8rem;
+margin-bottom: 1rem;
+color: var(--accent-bg);
 }
 
 .todo-list {
-  list-style: decimal inside;
-  padding: 0;
+list-style: decimal inside;
+padding: 0;
+}
+
+.todo-list li {
+margin-bottom: 0.75rem;
 }
 
 .todo-row {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr auto;
-  gap: 1rem;
-  align-items: center;
-  border: 2px solid var(--accent-bg);
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
+display: grid;
+grid-template-columns: 1fr 2fr 1fr auto;
+gap: 1rem;
+align-items: center;
+margin-bottom: 0.5rem;
+border: 2px solid var(--accent-bg);
+border-radius: 1rem;
+padding: 0.5rem 1rem;
+background-color: transparent;
+text-align: center;
 }
 
 .todo-row.completed {
-  background-color: var(--todo-completed-bg);
-  opacity: 0.95;
+background-color: var(--todo-completed-bg);
+border-color: var(--accent-bg);
+opacity: 0.95;
 }
 
 .todo-add {
-  border: 3px dotted var(--accent-bg);
-  border-radius: 1rem;
-  padding: 1rem;
-  text-align: center;
-  font-weight: bold;
-  cursor: pointer;
-  grid-column: span 3;
+border: 3px dotted var(--accent-bg);
+border-radius: 1rem;
+padding: 1rem;
+text-align: center;
+font-weight: bold;
+cursor: pointer;
+grid-column: span 3;
+transition: background 0.3s ease;
 }
 
 .todo-add:hover {
-  background-color: var(--todo-add-hover-bg);
+background-color: var(--todo-add-hover-bg);
 }
 
-/* ========== Inputs ========== */
-.task-input, .time-input, .status-select {
-  width: 100%;
-  padding: 0.4rem 0.6rem;
-  border: 2px solid var(--accent-bg);
-  border-radius: 0.5rem;
-  font-family: var(--font);
-  font-size: 1rem;
-  background-color: var(--main-bg);
-  color: var(--accent-bg);
+/* ============================
+  Inputs
+============================ */
+.task-input,
+.time-input {
+width: 90%;
+padding: 0.4rem 0.6rem;
+border: 2px solid var(--accent-bg);
+border-radius: 0.5rem;
+font-family: var(--font);
+font-size: 1rem;
+background-color: var(--main-bg);
+color: var(--accent-bg);
 }
 
-.task-input::placeholder, .time-input::placeholder {
-  color: var(--todo-placeholder-color);
-  font-style: italic;
+.task-input::placeholder,
+.time-input::placeholder {
+color: var(--todo-placeholder-color);
+font-style: italic;
 }
 
-/* ========== Delete Button ========== */
+.status-select {
+width: 100%;
+padding: 0.4rem;
+border: 2px solid var(--accent-bg);
+border-radius: 0.5rem;
+font-family: var(--font);
+font-size: 1rem;
+background-color: var(--main-bg);
+color: var(--accent-bg);
+}
+
+.status-select option {
+background-color: var(--main-bg);
+color: var(--accent-bg);
+}
+
+/* ============================
+  Delete Button
+============================ */
 .todo-delete {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+display: flex;
+justify-content: center;
+align-items: center;
 }
 
 .delete-task-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: var(--accent-bg);
-  cursor: pointer;
+background: none;
+border: none;
+color: var(--accent-bg);
+font-size: 1.2rem;
+cursor: pointer;
+transition: color 0.2s ease;
 }
 
-/* ========== Settings Panel ========== */
+.delete-task-btn:hover {
+color: #421704;
+}
+
+/* ============================
+  Settings Panel
+============================ */
 .settings-panel {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  background: var(--main-bg);
-  border: 4px solid var(--accent-bg);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  z-index: 10;
-  width: 450px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  color: var(--accent-bg);
-  display: block;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: all 0.3s ease;
-}
-
-.settings-panel.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%) scale(1);
-  pointer-events: auto;
+position: fixed;
+top: 50%;
+left: 50%;
+  bottom: 200%;
+transform: translate(-50%, -50%);
+background: var(--main-bg);
+border: 4px solid var(--accent-bg);
+border-radius: 1.5rem;
+padding: 2rem;
+z-index: 10;
+width: 450px;
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+font-family: var(--font);
+color: var(--accent-bg);
+transition: all 0.3s ease;
+  display: flex;
+  display: block; /* ✅ FIXED */
 }
 
 .settings-panel h2 {
-  text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+text-align: center;
+font-size: 1.8rem;
+margin-bottom: 1.5rem;
 }
 
 .section h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+font-size: 1.2rem;
+margin-bottom: 0.5rem;
 }
 
-/* ========== Theme Buttons ========== */
 .theme-btn {
-  width: 60px;
-  height: 60px;
-  background-color: currentColor;
-  border: none;
-  cursor: pointer;
-  mask: url('./flower-mask.svg') no-repeat center/contain;
-  -webkit-mask: url('./flower-mask.svg') no-repeat center/contain;
+width: 40px;
+height: 40px;
+background-color: currentColor;
+color: inherit;
+border: none;
+cursor: pointer;
+transition: transform 0.3s ease;
+
+-webkit-mask-image: url('./flower-mask.svg');
+mask-image: url('./flower-mask.svg');
+-webkit-mask-repeat: no-repeat;
+mask-repeat: no-repeat;
+-webkit-mask-position: center;
+mask-position: center;
+-webkit-mask-size: contain;
+mask-size: contain;
+
+/* Subtle animation when hovered */
+will-change: transform;
 }
 
 .theme-btn.active {
-  outline: 2px solid currentColor;
-  outline-offset: 5px;
-  border-radius: 50%;
+outline: 2px solid currentColor;
+outline-offset: 5px;
+border-radius: 50%;
+animation: bounceActive 0.5s ease;
+color: inherit;
+}
+
+@keyframes bounceActive {
+0%   { transform: scale(1); }
+40%  { transform: scale(1.2); }
+60%  { transform: scale(0.9); }
+100% { transform: scale(1); }
+}
+
+.theme-btn:hover:not(.active) {
+transform: rotate(10deg) scale(1.1);
+}
+
+.theme-btn:active:not(.active) {
+transform: scale(0.95);
 }
 
 .theme-options {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 1rem;
+display: flex;
+gap: 2rem;
+justify-content: center;
+flex-wrap: wrap;
+margin-top: 1rem;
 }
 
 .theme-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+display: flex;
+flex-direction: column;
+align-items: center;
 }
 
 .theme-label {
-  margin-top: 0.5rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
+margin-top: 0.5rem;
+font-size: 1.1rem;
+font-weight: bold;
+font-family: var(--font);
+text-transform: lowercase;
 }
 
-/* ========== Timer Inputs ========== */
+/* ============================
+  Timer Settings Inputs
+============================ */
 .timer-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+margin-bottom: 1.5rem;
 }
 
 .timer-inputs input {
-  width: 60px;
-  padding: 0.2rem;
-  text-align: center;
-  border: 2px solid var(--accent-bg);
-  border-radius: 0.4rem;
-  background: var(--main-bg);
-  color: var(--accent-bg);
+width: 60px;
+padding: 0.2rem;
+font-size: 1rem;
+text-align: center;
+margin-left: 0.5rem;
+border: 2px solid var(--accent-bg);
+border-radius: 0.4rem;
+background: var(--main-bg);
+color: var(--accent-bg);
 }
 
-/* ========== Settings Buttons ========== */
-.settings-s {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  font-weight: bold;
-  border-radius: 999px;
+/* ============================
+  Settings Panel Buttons
+============================ */
+.settings-buttons {
+display: flex;
+justify-content: space-between;
+gap: 0.5rem;
+}
+
+.settings-buttons button {
+flex: 1;
+padding: 0.5rem 0.8rem;
+font-weight: bold;
+border-radius: 999px;
+border: none;
+cursor: pointer;
+transition: background 0.2s;
+font-family: var(--font);
 }
 
 #resetBtn {
-  background: transparent;
-  border: 2px solid #a80000;
-  color: #a80000;
+background: transparent;
+border: 2px solid #a80000;
+color: #a80000;
 }
 
 #resetBtn:hover {
-  background: #f5d6d6;
+background: #f5d6d6;
 }
 
 #closeSettings {
-  background: var(--btn-bg);
-  color: var(--btn-text);
+background: var(--btn-bg);
+color: var(--btn-text);
 }
 
 #closeSettings:hover {
-  background: var(--btn-hover-bg);
+background: var(--btn-hover-bg);
 }
 
 #saveBtn {
-  background: var(--accent-bg);
-  color: var(--btn-text);
+background: var(--accent-bg);
+color: var(--btn-text);
 }
 
 #saveBtn:hover {
-  background: #421704;
+background: #421704;
 }
 
-/* ========== Responsive ========== */
+/* ============================
+  Responsive
+============================ */
 @media (max-width: 600px) {
-  .todo-row {
-    grid-template-columns: 1fr;
-    text-align: left;
-  }
+.todo-row {
+grid-template-columns: 1fr;
+text-align: left;
+}
 
-  .todo-add {
-    font-size: 0.9rem;
-    padding: 0.8rem;
-  }
+.todo-add {
+font-size: 0.9rem;
+padding: 0.8rem;
+}
 
-  .task-input, .time-input, .status-select {
-    width: 100%;
-  }
+.task-input,
+.time-input,
+.status-select {
+width: 100%;
+}
 
-  .time-display {
-    font-size: 6rem;
-  }
+.time-display {
+font-size: 6rem;
+}
 }
 
 /* ========== Footer ========== */
