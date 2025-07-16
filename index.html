@@ -1,116 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="pomodoro-style.css" />
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-crossorigin="anonymous"
-referrerpolicy="no-referrer"
-/>
-  <link rel="icon" type="image" href="/images/coffee-icon.png">
-  <link rel="icon" type="image" href="./coffee-icon.png">
-<title> cafe pomodoro ⋆.˚☕︎ </title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="pomodoro-style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" type="image/png" href="./coffee-icon.png" />
+  <title>cafe pomodoro ⋆.˚☕︎</title>
 </head>
 <body>
-<div class="timer-container">
-<div class="mode-buttons">
-<button id="pomodoroBtn" class="active">pomodoro</button>
-<button id="shortBreakBtn">short break</button>
-<button id="longBreakBtn">long break</button>
-</div>
+  <div class="timer-container">
+    <div class="mode-buttons">
+      <button id="pomodoroBtn" class="active">pomodoro</button>
+      <button id="shortBreakBtn">short break</button>
+      <button id="longBreakBtn">long break</button>
+    </div>
 
-<div class="time-display" id="time">25:00</div>
-<div class="interval-counter">
-intervals completed: <span id="intervalCount">0</span>
-</div>
+    <div class="time-display" id="time">25:00</div>
+    <div class="interval-counter">
+      intervals completed: <span id="intervalCount">0</span>
+    </div>
 
-<div class="control-row">
-<button class="control-icon" onclick="openSettings()">
-<i class="fa-solid fa-gear"></i>
-</button>
-<button id="start-timer" onclick="startTimer()" onmousedown="mouseclick.play()">start timer!</button>
-<button class="control-icon" onclick="resetTimer()">
-<i class="fa-solid fa-rotate"></i>
-</button>
-</div>
+    <div class="control-row">
+      <button class="control-icon" onclick="openSettings()">
+        <i class="fa-solid fa-gear"></i>
+      </button>
+      <button id="start-timer" onclick="startTimer()" onmousedown="mouseclick.play()">start timer!</button>
+      <button class="control-icon" onclick="resetTimer()">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+    </div>
 
-<div class="todo-container">
-<h2 class="todo-title">your to-do list...</h2>
+    <div class="todo-container">
+      <h2 class="todo-title">your to-do list...</h2>
+      <ol id="todo-task-list" class="todo-list"></ol>
+      <div class="todo-row add-task">
+        <div class="todo-add" id="addTaskBtn">
+          <i class="fa-solid fa-plus"></i> add task
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- Ordered task list -->
-<ol id="todo-task-list" class="todo-list"></ol>
+  <div class="settings-panel" id="settingsPanel" style="display: none;">
+    <h2><i class="fa-solid fa-gear"></i> settings</h2>
 
-<!-- Add task button outside the ordered list -->
-<div class="todo-row add-task">
-<div class="todo-add" id="addTaskBtn">
-<i class="fa-solid fa-plus"></i> add task
-</div>
-</div>
-</div>
-</div>
+    <div class="section">
+      <h3>change theme:</h3>
+      <div class="theme-options">
+        <div class="theme-item">
+          <button class="theme-btn active" data-theme="coffee" style="color: #73411f;"></button>
+          <span class="theme-label" style="color: #73411f;">coffee</span>
+        </div>
+        <div class="theme-item">
+          <button class="theme-btn" data-theme="matcha" style="color: #606c38;"></button>
+          <span class="theme-label" style="color: #606c38;">matcha</span>
+        </div>
+        <div class="theme-item">
+          <button class="theme-btn" data-theme="ube" style="color: #9b86a7;"></button>
+          <span class="theme-label" style="color: #9b86a7;">ube</span>
+        </div>
+        <div class="theme-item">
+          <button class="theme-btn" data-theme="lemonade" style="color: #eebe62;"></button>
+          <span class="theme-label" style="color: #eebe62;">lemonade</span>
+        </div>
+        <div class="theme-item">
+          <button class="theme-btn" data-theme="berry" style="color: #9c0b0a;"></button>
+          <span class="theme-label" style="color: #9c0b0a;">berry</span>
+        </div>
+      </div>
+    </div>
 
-<div class="settings-panel" id="settingsPanel" style="display: none;">
-<h2><i class="fa-solid fa-gear"></i> settings</h2>
+    <div class="section">
+      <h3>timer:</h3>
+      <div class="timer-inputs">
+        <label>pomodoro <input type="number" id="pomodoroInput" value="25" min="1" /> minutes</label>
+        <label>short break <input type="number" id="shortBreakInput" value="5" min="1" /> minutes</label>
+        <label>long break <input type="number" id="longBreakInput" value="15" min="1" /> minutes</label>
+      </div>
+    </div>
 
-<div class="section">
-<h3>change theme:</h3>
-<div class="theme-options">
-<div class="theme-item">
-<button class="theme-btn active" data-theme="coffee" style="color: #73411f;"></button>
-<span class="theme-label" style="color: #73411f;">coffee</span>
-</div>
-<div class="theme-item">
-<button class="theme-btn" data-theme="matcha" style="color: #606c38;"></button>
-<span class="theme-label" style="color: #606c38;">matcha</span>
-</div>
-<div class="theme-item">
-<button class="theme-btn" data-theme="ube" style="color: #9b86a7;"></button>
-<span class="theme-label" style="color: #9b86a7;">ube</span>
-</div>
-<div class="theme-item">
-<button class="theme-btn" data-theme="lemonade" style="color: #eebe62;"></button>
-<span class="theme-label" style="color: #eebe62;">lemonade</span>
-</div>
-<div class="theme-item">
-<button class="theme-btn" data-theme="berry" style="color: #9c0b0a;"></button>
-<span class="theme-label" style="color: #9c0b0a;">berry</span>
-</div>
-</div>
-</div>
+    <div class="settings-buttons">
+      <button id="resetBtn">reset all</button>
+      <button id="closeSettings">close</button>
+      <button id="saveBtn">save changes</button>
+    </div>
+  </div>
 
-<div class="section">
-<h3>timer:</h3>
-<div class="timer-inputs">
-<label>pomodoro <input type="number" id="pomodoroInput" value="25" min="1" /> minutes</label>
-<label>short break <input type="number" id="shortBreakInput" value="5" min="1" /> minutes</label>
-<label>long break <input type="number" id="longBreakInput" value="15" min="1" /> minutes</label>
-</div>
-</div>
-
-<div class="settings-buttons">
-<button id="resetBtn">reset all</button>
-<button id="closeSettings">close</button>
-<button id="saveBtn">save changes</button>
-</div>
-</div>
-
- <footer>
+  <footer style="margin-top: 2rem; text-align: center;">
     <p>
-    Created by Jena Bathan
-    <a href="mailto:jenamaribathan@gmail.com" style="margin-left: 10px;">
-    <i class="fa-solid fa-envelope"></i> jenamaribathan@gmail.com
-    </a>
+      Created by Jena Bathan
+      <a href="mailto:jenamaribathan@gmail.com" style="margin-left: 10px;">
+        <i class="fa-solid fa-envelope"></i> jenamaribathan@gmail.com
+      </a>
     </p>
-</footer>
+  </footer>
 
-<script src="pomodoro-script.js"></script>
+  <script src="pomodoro-script.js"></script>
 </body>
 </html>
-
-
-
-
-
