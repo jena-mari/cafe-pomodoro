@@ -513,13 +513,13 @@ select:focus {
 ============================ */
 footer {
   text-align: center;
-  padding: 1em 0;
+  padding: 0.5em 0; 
   font-family: var(--font);
-  font-size: 1em;
-  background-color: var(--main-bg); /* Light background */
-  border-top: 0.3px solid var(--accent-bg);
-  color: var(--accent-bg); /* Dark text */
-  margin-top: auto;
+  font-size: 0.8em; 
+  background-color: var(--main-bg);
+  border-top: 0.1px solid var(--accent-bg); /* Reduced border */
+  color: var(--accent-bg);
+  margin-top: 0; 
   flex-shrink: 0;
   width: 100%;
 }
