@@ -20,6 +20,8 @@
     long: 15,
   };
 
+  let startTime, expectedEndTime;
+
   function updateTime() {
     const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
     const seconds = (timeLeft % 60).toString().padStart(2, '0');
@@ -38,11 +40,15 @@
     if (!isRunning) {
       isRunning = true;
       startBtn.textContent = 'stop timer!';
+      startTime = Date.now();
+      expectedEndTime = startTime + timeLeft * 1000;
+
       timer = setInterval(() => {
-        if (timeLeft > 0) {
-          timeLeft--;
-          updateTime();
-        } else {
+        const now = Date.now();
+        timeLeft = Math.max(0, Math.floor((expectedEndTime - now) / 1000));
+        updateTime();
+
+        if (timeLeft <= 0) {
           clearInterval(timer);
           isRunning = false;
           startBtn.textContent = 'start timer!';
@@ -63,6 +69,8 @@
       clearInterval(timer);
       isRunning = false;
       startBtn.textContent = 'start timer!';
+      const now = Date.now();
+      timeLeft = Math.max(0, Math.floor((expectedEndTime - now) / 1000));
     }
   }
 
@@ -242,7 +250,6 @@
     saveTasks();
   });
 
-  // Button listeners
   document.getElementById('pomodoroBtn').addEventListener('click', () => setMode('pomodoro'));
   document.getElementById('shortBreakBtn').addEventListener('click', () => setMode('shortBreak'));
   document.getElementById('longBreakBtn').addEventListener('click', () => setMode('longBreak'));
@@ -290,7 +297,6 @@
     settingsPanel.style.display = 'block';
   });
 
-  // Initialize
   const storedTheme = localStorage.getItem('selectedTheme') || 'coffee';
   applyTheme(storedTheme);
   setTimeByMode(currentMode);
