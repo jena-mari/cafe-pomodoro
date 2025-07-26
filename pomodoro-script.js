@@ -5,43 +5,58 @@
   const taskList = document.getElementById('todo-task-list');
   const addTaskBtn = document.getElementById('addTaskBtn');
   const settingsPanel = document.getElementById('settingsPanel');
+
   const mouseclick = new Audio("https://uploads.sitepoint.com/wp-content/uploads/2023/06/1687569402mixkit-fast-double-click-on-mouse-275.wav");
+  const alarmSound = new Audio("https://www.soundjay.com/buttons/sounds/beep-07.mp3");
 
   let timer;
-  let timeLeft = 25 * 60;
+  let timeLeft;
+  let totalTime;
   let isRunning = false;
-  let currentMode = 'pomodoro';
-  let intervalsCompleted = parseInt(localStorage.getItem('intervalsCompleted')) || 0;
+  let paused = false;
+  let pauseTimeLeft = 0;
+  let currentMode = localStorage.getItem('cafePomodoro_mode') || 'pomodoro';
+
+  let intervalsCompleted = parseInt(localStorage.getItem('cafePomodoro_intervalsCompleted')) || 0;
   intervalCount.textContent = intervalsCompleted;
 
-  let timerDurations = JSON.parse(localStorage.getItem('timerDurations')) || {
+  let timerDurations = JSON.parse(localStorage.getItem('cafePomodoro_timerDurations')) || {
     pomo: 25,
     short: 5,
     long: 15,
   };
 
-  let startTime, expectedEndTime;
-
   function updateTime() {
     const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
     const seconds = (timeLeft % 60).toString().padStart(2, '0');
     timerDisplay.textContent = `${minutes}:${seconds}`;
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const progress = document.getElementById('timer-progress');
+    if (progress) progress.value = totalTime - timeLeft;
   }
 
   function setTimeByMode(mode) {
-    timeLeft = {
+    const durations = {
       pomodoro: timerDurations.pomo * 60,
       shortBreak: timerDurations.short * 60,
       longBreak: timerDurations.long * 60,
-    }[mode];
+    };
+    totalTime = durations[mode];
+    timeLeft = durations[mode];
+    if (document.getElementById('timer-progress')) {
+      document.getElementById('timer-progress').max = totalTime;
+    }
   }
 
   function startTimer() {
     if (!isRunning) {
       isRunning = true;
-      startBtn.textContent = 'stop timer!';
-      startTime = Date.now();
-      expectedEndTime = startTime + timeLeft * 1000;
+      startBtn.textContent = 'pause timer!';
+      const expectedEndTime = Date.now() + (paused ? pauseTimeLeft : timeLeft) * 1000;
+      paused = false;
 
       timer = setInterval(() => {
         const now = Date.now();
@@ -56,7 +71,7 @@
 
           if (currentMode === 'pomodoro') {
             intervalsCompleted++;
-            localStorage.setItem('intervalsCompleted', intervalsCompleted);
+            localStorage.setItem('cafePomodoro_intervalsCompleted', intervalsCompleted);
             intervalCount.textContent = intervalsCompleted;
             checkTasksCompletion();
             autoStartNext('shortBreak');
@@ -67,10 +82,10 @@
       }, 1000);
     } else {
       clearInterval(timer);
+      pauseTimeLeft = timeLeft;
+      paused = true;
       isRunning = false;
-      startBtn.textContent = 'start timer!';
-      const now = Date.now();
-      timeLeft = Math.max(0, Math.floor((expectedEndTime - now) / 1000));
+      startBtn.textContent = 'resume timer!';
     }
   }
 
@@ -79,16 +94,9 @@
     startTimer();
   }
 
-  function resetTimer() {
-    clearInterval(timer);
-    setTimeByMode(currentMode);
-    updateTime();
-    isRunning = false;
-    startBtn.textContent = 'start timer!';
-  }
-
   function setMode(mode) {
     currentMode = mode;
+    localStorage.setItem('cafePomodoro_mode', mode);
     document.querySelectorAll('.mode-buttons button').forEach(btn => btn.classList.remove('active'));
     document.getElementById(`${mode}Btn`).classList.add('active');
     setTimeByMode(mode);
@@ -96,14 +104,22 @@
   }
 
   function notifyUser() {
-    const audio = new Audio("https://www.soundjay.com/buttons/sounds/beep-07.mp3");
-    audio.play();
+    alarmSound.play();
+
+    if (Notification.permission === 'granted') {
+      new Notification("⏰ Time's Up!", {
+        body: `Time to switch from ${currentMode}.`,
+        icon: '/icon.png'
+      });
+    }
+
     let blink = true;
     const originalTitle = document.title;
     const interval = setInterval(() => {
       document.title = blink ? "⏰ TIME'S UP!" : originalTitle;
       blink = !blink;
     }, 1000);
+
     setTimeout(() => {
       clearInterval(interval);
       document.title = originalTitle;
@@ -169,7 +185,6 @@
         '--todo-placeholder-color': '#7f0000',
         '--todo-add-hover-bg': '#ffecec'
       }
-    };
     const selected = themes[theme] || themes.coffee;
     for (const key in selected) {
       root.style.setProperty(key, selected[key]);
@@ -303,4 +318,21 @@
   updateTime();
   loadTasks();
   saveTasks();
+
+  // Initial load
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission();
+  }
+
+  const storedTheme = localStorage.getItem('selectedTheme') || 'coffee';
+  applyTheme(storedTheme);
+  setTimeByMode(currentMode);
+  updateTime();
+  loadTasks();
+  saveTasks();
+
+  startBtn.addEventListener('click', () => {
+    mouseclick.play();
+    startTimer();
+  });
 })();
