@@ -67,7 +67,7 @@
           clearInterval(timer);
           isRunning = false;
           startBtn.textContent = 'start timer!';
-          notifyUser();
+          notifyUser ();
 
           if (currentMode === 'pomodoro') {
             intervalsCompleted++;
@@ -103,7 +103,7 @@
     updateTime();
   }
 
-  function notifyUser() {
+  function notifyUser () {
     alarmSound.play();
 
     if (Notification.permission === 'granted') {
@@ -185,6 +185,7 @@
         '--todo-placeholder-color': '#7f0000',
         '--todo-add-hover-bg': '#ffecec'
       }
+    };
     const selected = themes[theme] || themes.coffee;
     for (const key in selected) {
       root.style.setProperty(key, selected[key]);
@@ -277,7 +278,7 @@
     timerDurations.pomo = parseInt(document.getElementById('pomodoroInput').value) || 25;
     timerDurations.short = parseInt(document.getElementById('shortBreakInput').value) || 5;
     timerDurations.long = parseInt(document.getElementById('longBreakInput').value) || 15;
-    localStorage.setItem('timerDurations', JSON.stringify(timerDurations));
+    localStorage.setItem('cafePomodoro_timerDurations', JSON.stringify(timerDurations));
     setTimeByMode(currentMode);
     updateTime();
     settingsPanel.style.display = 'none';
@@ -312,13 +313,6 @@
     settingsPanel.style.display = 'block';
   });
 
-  const storedTheme = localStorage.getItem('selectedTheme') || 'coffee';
-  applyTheme(storedTheme);
-  setTimeByMode(currentMode);
-  updateTime();
-  loadTasks();
-  saveTasks();
-
   // Initial load
   if (Notification.permission !== 'granted') {
     Notification.requestPermission();
@@ -330,9 +324,4 @@
   updateTime();
   loadTasks();
   saveTasks();
-
-  startBtn.addEventListener('click', () => {
-    mouseclick.play();
-    startTimer();
-  });
 })();
