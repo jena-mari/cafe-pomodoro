@@ -2,46 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="pomodoro-style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="icon" type="image/png" href="./coffee-icon.png" />
-  <title>cafe pomodoro ⋆.˚☕︎</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Café Pomodoro</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <div class="page-wrapper">
-    <div class="timer-container">
-      <div class="mode-buttons">
-        <button id="pomodoroBtn" class="active">pomodoro</button>
-        <button id="shortBreakBtn">short break</button>
-        <button id="longBreakBtn">long break</button>
+  <main class="pomodoro">
+    <section class="timer-container">
+      <div class="timer-header">
+        <div class="mode-buttons">
+          <button id="pomodoroBtn">pomodoro</button>
+          <button id="shortBreakBtn">short break</button>
+          <button id="longBreakBtn">long break</button>
+        </div>
+        <div class="intervals">intervals completed: <span id="intervalCount">0</span></div>
       </div>
 
-      <div class="time-display" id="time">25:00</div>
-      <div class="interval-counter">
-        intervals completed: <span id="intervalCount">0</span>
+      <div class="timer-display">
+        <div id="time">25:00</div>
+        <progress id="timer-progress" max="1500" value="0"></progress>
       </div>
 
-      <div class="control-row">
-        <button class="control-icon" id="open-settings">
-          <i class="fa-solid fa-gear"></i>
-        </button>
+      <div class="timer-controls">
         <button id="start-timer">start timer!</button>
-        <button class="control-icon" id="reset-timer">
-          <i class="fa-solid fa-rotate"></i>
-        </button>
-      </div>
-
-      <div class="todo-container">
-        <h2 class="todo-title">your to-do list...</h2>
-        <ol id="todo-task-list" class="todo-list"></ol>
-        <div class="todo-row add-task">
-          <div class="todo-add" id="addTaskBtn">
-            <i class="fa-solid fa-plus"></i> add task
-          </div>
+        <div class="icon-controls">
+          <button class="control-icon reset-btn" id="resetBtn"><i class="fa-solid fa-rotate"></i></button>
+          <button class="control-icon" id="settingsIcon" data-settings><i class="fa-solid fa-gear"></i></button>
         </div>
       </div>
-    </div>
+    </section>
+
+    <section class="todo-section">
+      <h2>☕ your to-do list</h2>
+      <div id="todo-task-list"></div>
+      <button id="addTaskBtn">+ add task</button>
+    </section>
 
     <div class="settings-panel" id="settingsPanel" style="display: none;">
       <h2><i class="fa-solid fa-gear"></i> settings</h2>
@@ -72,31 +68,16 @@
         </div>
       </div>
 
-      <div class="section">
-        <h3>timer:</h3>
-        <div class="timer-inputs">
-          <label>pomodoro <input type="number" id="pomodoroInput" value="25" min="1" /> minutes</label>
-          <label>short break <input type="number" id="shortBreakInput" value="5" min="1" /> minutes</label>
-          <label>long break <input type="number" id="longBreakInput" value="15" min="1" /> minutes</label>
-        </div>
-      </div>
-
-      <div class="settings-buttons">
-        <button id="resetBtn">reset all</button>
-        <button id="closeSettings">close</button>
-        <button id="saveBtn">save changes</button>
+      <div class="settings-actions">
+        <input id="pomodoroInput" type="number" placeholder="Pomodoro (min)">
+        <input id="shortBreakInput" type="number" placeholder="Short Break (min)">
+        <input id="longBreakInput" type="number" placeholder="Long Break (min)">
+        <button id="saveBtn">save</button>
+        <button id="resetSettings"> reset all</button>
+        <button id="closeSettings"> close</button>
       </div>
     </div>
-  </div>
-
-  <footer style="margin-top: 2rem; text-align: center;">
-    <p>
-      Created by Jena Bathan
-      <a href="mailto:jenamaribathan@gmail.com" style="margin-left: 10px;">
-        <i class="fa-solid fa-envelope"></i> jenamaribathan@gmail.com
-      </a>
-    </p>
-  </footer>
+  </main>
 
   <script src="pomodoro-script.js"></script>
 </body>
