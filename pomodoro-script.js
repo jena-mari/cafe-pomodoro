@@ -7,7 +7,7 @@
   const settingsPanel = document.getElementById('settingsPanel');
 
   const mouseclick = new Audio("https://uploads.sitepoint.com/wp-content/uploads/2023/06/1687569402mixkit-fast-double-click-on-mouse-275.wav");
-  const alarmSound = new Audio("https://www.soundjay.com/buttons/sounds/beep-07.mp3");
+  const alarmSound = new Audio("alarm_sound.wav");
 
   let timer;
   let timeLeft;
@@ -16,6 +16,7 @@
   let paused = false;
   let pauseTimeLeft = 0;
   let currentMode = localStorage.getItem('cafePomodoro_mode') || 'pomodoro';
+  let pomodorosUntilLongBreak = 4;
 
   let intervalsCompleted = parseInt(localStorage.getItem('cafePomodoro_intervalsCompleted')) || 0;
   intervalCount.textContent = intervalsCompleted;
@@ -67,14 +68,16 @@
           clearInterval(timer);
           isRunning = false;
           startBtn.textContent = 'start timer!';
-          notifyUser ();
-
+          notifyUser();
+        
           if (currentMode === 'pomodoro') {
             intervalsCompleted++;
             localStorage.setItem('cafePomodoro_intervalsCompleted', intervalsCompleted);
             intervalCount.textContent = intervalsCompleted;
             checkTasksCompletion();
-            autoStartNext('shortBreak');
+        
+            const isLongBreak = intervalsCompleted % pomodorosUntilLongBreak === 0;
+            autoStartNext(isLongBreak ? 'longBreak' : 'shortBreak');
           } else {
             autoStartNext('pomodoro');
           }
