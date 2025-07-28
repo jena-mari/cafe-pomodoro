@@ -2,27 +2,27 @@
   Fonts
 ============================ */
 @font-face {
-font-family: 'altehaasgrotesk';
-src: url('AlteHaasGroteskBold.ttf') format('truetype');
-font-weight: bold;
-font-style: normal;
+  font-family: 'altehaasgrotesk';
+  src: url('AlteHaasGroteskBold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
 }
 
 /* ============================
   Root Variables
 ============================ */
 :root {
---main-bg: #fff4e6;
---accent-bg: #73411f;
---text-color: #73411f;
---btn-bg: #ab7843;
---btn-hover-bg: #73411f;
---btn-text: #fff4e6;
---font: 'altehaasgrotesk', sans-serif;
+  --main-bg: #fff4e6;
+  --accent-bg: #73411f;
+  --text-color: #73411f;
+  --btn-bg: #ab7843;
+  --btn-hover-bg: #73411f;
+  --btn-text: #fff4e6;
+  --font: 'altehaasgrotesk', sans-serif;
 
---todo-completed-bg: #d7bda6;
---todo-placeholder-color: #b4875c;
---todo-add-hover-bg: #f9e4cc;
+  --todo-completed-bg: #d7bda6;
+  --todo-placeholder-color: #b4875c;
+  --todo-add-hover-bg: #f9e4cc;
 }
 
 /* ============================
