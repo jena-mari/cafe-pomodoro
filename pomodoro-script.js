@@ -52,7 +52,7 @@
   }
 
   function startTimer() {
-    if (timer) clearInterval(timer); // prevent multiple intervals
+    if (timer) clearInterval(timer);
 
     if (!isRunning) {
       isRunning = true;
@@ -112,7 +112,7 @@
     alarmSound.play().catch(() => {});
     if (Notification.permission === 'granted') {
       new Notification("⏰ Time's Up!", {
-        body: `Time to switch from ${currentMode}.`,
+        body: `Time to switch from ${currentMode}.\`,
         icon: '/icon.png'
       });
     }
@@ -133,7 +133,7 @@
   function applyTheme(theme) {
     const root = document.documentElement;
     root.style.transition = 'all 0.4s ease';
-    const themes = { /* [unchanged theme list] */ };
+    const themes = {};
     const selected = themes[theme] || themes.coffee;
     for (const key in selected) {
       root.style.setProperty(key, selected[key]);
@@ -166,7 +166,7 @@
     newTask.className = 'todo-row';
     if (status === 'completed') newTask.classList.add('completed');
 
-    newTask.innerHTML = `...`; // same HTML template
+    newTask.innerHTML = `...`;
 
     newTask.querySelector('.delete-task-btn').addEventListener('click', () => {
       newTask.remove();
@@ -192,7 +192,6 @@
     });
   }
 
-  // Event Listeners
   addTaskBtn.addEventListener('click', () => {
     const newTask = createTaskRow();
     taskList.appendChild(newTask);
@@ -246,12 +245,10 @@
     startTimer();
   });
 
-  // Fixed settings icon trigger
   document.querySelector('.control-icon[data-settings]')?.addEventListener('click', () => {
     settingsPanel.style.display = 'block';
   });
 
-  // Initial Load
   if (Notification.permission !== 'granted') {
     Notification.requestPermission();
   }
