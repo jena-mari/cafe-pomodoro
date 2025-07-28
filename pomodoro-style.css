@@ -112,7 +112,7 @@ body {
 
 /* Large timer display */
 .time-display {
-  font-size: clamp(6rem, 15vw, 14rem);
+  font-size: clamp(4rem, 10vw, 10rem);
   font-weight: 900;
   color: var(--accent-bg);
   margin: 1rem 0;
