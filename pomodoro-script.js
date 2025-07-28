@@ -95,14 +95,87 @@
     startTimer();
   }
 
-  function setMode(mode) {
-    currentMode = mode;
-    localStorage.setItem('cafePomodoro_mode', mode);
-    document.querySelectorAll('.mode-buttons button').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`${mode}Btn`).classList.add('active');
-    setTimeByMode(mode);
-    updateTime();
+  function applyTheme(theme) {
+  const root = document.documentElement;
+  root.style.transition = 'all 0.4s ease';
+  const themes = {
+    coffee: {
+      '--accent-bg': '#73411f',
+      '--btn-bg': '#ab7843',
+      '--btn-hover-bg': '#73411f',
+      '--text-color': '#73411f',
+      '--main-bg': '#fff4e6',
+      '--btn-text': '#fff4e6',
+      '--todo-completed-bg': '#d7bda6',
+      '--todo-placeholder-color': '#b4875c',
+      '--todo-add-hover-bg': '#f9e4cc'
+    },
+    matcha: {
+      '--accent-bg': '#606c38',
+      '--btn-bg': '#a3b18a',
+      '--btn-hover-bg': '#283618',
+      '--text-color': '#283618',
+      '--main-bg': '#fefae0',
+      '--btn-text': '#fefae0',
+      '--todo-completed-bg': '#d9e6cc',
+      '--todo-placeholder-color': '#5c7035',
+      '--todo-add-hover-bg': '#f1f3d8'
+    },
+    ube: {
+      '--accent-bg': '#9b86a7',
+      '--btn-bg': '#cdb4db',
+      '--btn-hover-bg': '#5e548e',
+      '--text-color': '#5e548e',
+      '--main-bg': '#f3e9f7',
+      '--btn-text': '#f3e9f7',
+      '--todo-completed-bg': '#e2d1e7',
+      '--todo-placeholder-color': '#7e6896',
+      '--todo-add-hover-bg': '#f8effc'
+    },
+    lemonade: {
+      '--accent-bg': '#eebe62',
+      '--btn-bg': '#ffbe0b',
+      '--btn-hover-bg': '#ffbe0b',
+      '--text-color': '#ff9f1c',
+      '--main-bg': '#fff9e6',
+      '--btn-text': '#fff9e6',
+      '--todo-completed-bg': '#fff3c7',
+      '--todo-placeholder-color': '#c28c00',
+      '--todo-add-hover-bg': '#fff8dc'
+    },
+    berry: {
+      '--accent-bg': '#9c0b0a',
+      '--btn-bg': '#ff4d4d',
+      '--btn-hover-bg': '#7f0000',
+      '--text-color': '#7f0000',
+      '--main-bg': '#ffe5e5',
+      '--btn-text': '#ffe5e5',
+      '--todo-completed-bg': '#ffc7c7',
+      '--todo-placeholder-color': '#7f0000',
+      '--todo-add-hover-bg': '#ffecec'
+    }
+  };
+  const selectedTheme = themes[theme];
+  if (selectedTheme) {
+    for (const variable in selectedTheme) {
+      root.style.setProperty(variable, selectedTheme[variable]);
+    }
   }
+  document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`.theme-btn[data-theme="${theme}"]`).classList.add('active');
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  clearInterval(timerInterval);
+  isRunning = false;
+  document.getElementById('start-timer').textContent = 'start timer!';
+  remainingTime = timerDurations[mode];
+  updateDisplay();
+
+  document.querySelectorAll('.mode-buttons button').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`${mode}Btn`).classList.add('active');
+}
 
   function notifyUser() {
     alarmSound.play();
