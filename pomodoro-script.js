@@ -99,13 +99,28 @@
   }
 
   function setMode(mode) {
-    currentMode = mode;
-    localStorage.setItem('cafePomodoro_mode', mode);
-    document.querySelectorAll('.mode-buttons button').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`${mode}Btn`).classList.add('active');
-    setTimeByMode(mode);
-    updateTime();
+  if (isRunning) {
+    clearInterval(timer);
+    isRunning = false;
+    paused = false;
+    pauseTimeLeft = 0;
+    startBtn.textContent = 'start timer!';
   }
+
+  currentMode = mode;
+  localStorage.setItem('cafePomodoro_mode', mode);
+
+  // Update active class on mode buttons
+  document.querySelectorAll('.mode-buttons button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  const modeBtn = document.getElementById(`${mode}Btn`);
+  if (modeBtn) modeBtn.classList.add('active');
+
+  // Reset and update timer
+  setTimeByMode(mode);
+  updateTime();
+}
 
   function notifyUser() {
     alarmSound.play();
@@ -280,10 +295,24 @@
     saveTasks();
   });
 
-  document.getElementById('pomodoroBtn').addEventListener('click', () => setMode('pomodoro'));
-  document.getElementById('shortBreakBtn').addEventListener('click', () => setMode('shortBreak'));
-  document.getElementById('longBreakBtn').addEventListener('click', () => setMode('longBreak'));
+    document.getElementById('pomodoroBtn').addEventListener('click', () => {
+    mouseclick.play();
+    setMode('pomodoro');
+  });
+  document.getElementById('shortBreakBtn').addEventListener('click', () => {
+    mouseclick.play();
+    setMode('shortBreak');
+  });
+  document.getElementById('longBreakBtn').addEventListener('click', () => {
+    mouseclick.play();
+    setMode('longBreak');
+  });
 
+  function safeSetMode(mode) {
+    if (isRunning && !confirm("Timer is running. Do you want to switch modes and stop the timer?")) return;
+    setMode(mode);
+  }
+  
   document.getElementById('closeSettings').addEventListener('click', () => {
     settingsPanel.style.display = 'none';
   });
