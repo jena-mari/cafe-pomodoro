@@ -120,8 +120,6 @@
   currentMode = mode;
   localStorage.setItem('cafePomodoro_mode', mode);
 
-  document.title = `Pomodoro Timer - ${mode.charAt(0).toUpperCase() + mode.slice(1).replace(/([A-Z])/g, ' $1')}`;
-
   // Update active class on mode buttons
   document.querySelectorAll('.mode-buttons button').forEach(btn => {
     btn.classList.remove('active');
