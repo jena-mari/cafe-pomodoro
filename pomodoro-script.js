@@ -73,10 +73,20 @@
             checkTasksCompletion();
 
             // Auto-switch between breaks based on intervals completed
-            if (intervalsCompleted % POMODOROS_BEFORE_LONG_BREAK === 0) {
-              autoStartNext('longBreak');
+            if (currentMode === 'pomodoro') {
+              intervalsCompleted++;
+              localStorage.setItem('cafePomodoro_intervalsCompleted', intervalsCompleted);
+              intervalCount.textContent = intervalsCompleted;
+              checkTasksCompletion();
+            
+              if (intervalsCompleted % POMODOROS_BEFORE_LONG_BREAK === 0 && intervalsCompleted !== 0) {
+                autoStartNext('longBreak');
+              } else {
+                autoStartNext('shortBreak');
+              }
             } else {
-              autoStartNext('shortBreak');
+              // After break, always return to pomodoro
+              autoStartNext('pomodoro');
             }
           } else {
             // After break, always go to pomodoro
@@ -110,6 +120,8 @@
   currentMode = mode;
   localStorage.setItem('cafePomodoro_mode', mode);
 
+  document.title = `Pomodoro Timer - ${mode.charAt(0).toUpperCase() + mode.slice(1).replace(/([A-Z])/g, ' $1')}`;
+
   // Update active class on mode buttons
   document.querySelectorAll('.mode-buttons button').forEach(btn => {
     btn.classList.remove('active');
@@ -126,8 +138,8 @@
     alarmSound.play();
 
     if (Notification.permission === 'granted') {
-      new Notification("⏰ Time's Up!", {
-        body: `Time to switch from ${currentMode}.`,
+      new Notification("⏰ time's up!", {
+        body: `time to switch from ${currentMode}.`,
         icon: '/icon.png'
       });
     }
