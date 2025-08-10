@@ -1,6 +1,15 @@
 /* ============================
   Fonts
 ============================ */
+/* Normal weight */
+@font-face {
+  font-family: 'altehaasgrotesk';
+  src: url('AlteHaasGroteskRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Bold weight */
 @font-face {
   font-family: 'altehaasgrotesk';
   src: url('AlteHaasGroteskBold.ttf') format('truetype');
@@ -23,6 +32,11 @@
   --todo-completed-bg: #d7bda6;
   --todo-placeholder-color: #b4875c;
   --todo-add-hover-bg: #f9e4cc;
+
+  /* Added radius variables for consistency */
+  --radius-small: 0.5rem;
+  --radius-medium: 1rem;
+  --radius-pill: 999px;
 }
 
 /* ============================
@@ -63,7 +77,7 @@ body {
 ============================ */
 .timer-container {
   background-color: var(--main-bg);
-  border-radius: 1rem;
+  border-radius: var(--radius-medium);
   padding: 3rem 2rem;
   width: 100%;
   max-width: 800px;
@@ -75,6 +89,9 @@ body {
   justify-content: center;
   align-items: center;
   margin: auto;
+
+  /* Added subtle shadow for depth */
+  box-shadow: 0 6px 20px rgba(115, 65, 31, 0.15);
 }
 
 .mode-buttons {
@@ -87,7 +104,7 @@ body {
 
 .mode-buttons button {
   padding: 0.6rem 1.8rem;
-  border-radius: 2rem;
+  border-radius: var(--radius-pill);
   border: 3px solid var(--accent-bg);
   background: none;
   color: var(--accent-bg);
@@ -131,6 +148,7 @@ body {
 }
 
 #resetIntervals {
+  font-family: 'altehaasgrotesk';
   font-size: 0.8rem;
   padding: 0.3rem 0.8rem;
   border-radius: 0.6rem;
@@ -143,6 +161,7 @@ body {
 }
 
 #resetIntervals:hover {
+  font-family: 'altehaasgrotesk';
   background-color: var(--btn-hover-bg);
   color: var(--btn-text);
 }
@@ -164,7 +183,7 @@ body {
   background-color: var(--btn-bg);
   border: none;
   padding: 0.75rem 2.5rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-weight: 700;
   font-size: 1rem;
   color: var(--btn-text);
@@ -189,6 +208,7 @@ body {
 
 /* Gear, reset icons */
 .control-icon {
+  font-family: 'altehaasgrotesk';
   font-size: 2rem;
   background: none;
   border: none;
@@ -196,6 +216,9 @@ body {
   cursor: pointer;
   transition: transform 0.1s ease, color 0.3s ease;
   user-select: none;
+
+  /* Added padding for better hit area */
+  padding: 0.5rem;
 }
 
 .control-icon:hover {
@@ -212,12 +235,11 @@ body {
 .todo-container {
   margin-top: 2rem;
   background-color: var(--main-bg);
-  border-radius: 1rem;
+  border-radius: var(--radius-medium);
   padding: 1.5rem;
   max-width: 800px;
   width: 100%;
   box-sizing: border-box;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
 }
 
 .todo-title {
@@ -246,7 +268,7 @@ body {
   align-items: center;
   margin-bottom: 0.5rem;
   border: 2px solid var(--accent-bg);
-  border-radius: 1rem;
+  border-radius: var(--radius-medium);
   padding: 0.5rem 1rem;
   background-color: transparent;
   text-align: center;
@@ -259,10 +281,9 @@ body {
   opacity: 0.95;
 }
 
-/* Add task button styling */
 .todo-add {
-  border: 3px dotted var(--accent-bg);
-  border-radius: 1rem;
+  border: 2px dotted var(--accent-bg);
+  border-radius: var(--radius-medium);
   padding: 1rem;
   text-align: center;
   font-weight: 700;
@@ -270,6 +291,8 @@ body {
   grid-column: span 3;
   transition: background 0.3s ease, color 0.3s ease;
   user-select: none;
+  background-color: var(--main-bg); /* added explicit bg */
+  color: var(--accent-bg);
 }
 
 .todo-add:hover {
@@ -285,7 +308,7 @@ body {
   width: 90%;
   padding: 0.4rem 0.6rem;
   border: 2px solid var(--accent-bg);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-small);
   font-family: var(--font);
   font-size: 1rem;
   background-color: var(--main-bg);
@@ -309,7 +332,7 @@ body {
   width: 100%;
   padding: 0.4rem;
   border: 2px solid var(--accent-bg);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-small);
   font-family: var(--font);
   font-size: 1rem;
   background-color: var(--main-bg);
@@ -363,7 +386,7 @@ body {
   border-radius: 1.5rem;
   padding: 2rem;
   z-index: 10;
-  width: 450px;
+  width: 28rem; /* was 450px converted to rem */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   font-family: var(--font);
   color: var(--accent-bg);
@@ -401,6 +424,10 @@ body {
   -webkit-mask-size: contain;
   mask-size: contain;
   will-change: transform;
+
+  /* Added padding and border fallback */
+  padding: 0.25rem;
+  border: 2px solid transparent;
 }
 
 .theme-btn.active {
@@ -421,6 +448,7 @@ body {
 
 .theme-btn:hover:not(.active) {
   transform: rotate(10deg) scale(1.1);
+  border-color: currentColor;
 }
 
 .theme-btn:active:not(.active) {
@@ -461,13 +489,13 @@ body {
 }
 
 .timer-inputs input {
-  width: 60px;
+  width: 3.75rem; /* was 60px converted to rem */
   padding: 0.2rem;
   font-size: 1rem;
   text-align: center;
   margin-left: 0.5rem;
   border: 2px solid var(--accent-bg);
-  border-radius: 0.4rem;
+  border-radius: var(--radius-small);
   background: var(--main-bg);
   color: var(--accent-bg);
   transition: border-color 0.3s ease;
@@ -490,14 +518,16 @@ body {
 input:focus-visible,
 select:focus-visible,
 button:focus-visible {
-  outline: none;
+  /* Added visible focus styles for accessibility */
+  outline: 3px solid var(--btn-hover-bg);
+  outline-offset: 3px;
 }
 
 .settings-buttons button {
   flex: 1;
   padding: 0.5rem 0.8rem;
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: none;
   cursor: pointer;
   transition: background 0.2s;
@@ -506,12 +536,15 @@ button:focus-visible {
 }
 
 #resetBtn {
+  font-family: 'altehaasgrotesk';
   background: transparent;
   border: 2px solid #a80000;
   color: #a80000;
+  font-family: var(--font);
 }
 
 #resetBtn:hover {
+  font-family: 'altehaasgrotesk';
   background: #f5d6d6;
 }
 
@@ -556,6 +589,16 @@ button:focus-visible {
   .time-display {
     font-size: 6rem;
   }
+
+  .mode-buttons button {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+  }
+
+  .timer-container {
+    padding: 2rem 1rem;
+    min-height: auto;
+  }
 }
 
 /* ========== Footer ========== */
@@ -588,4 +631,14 @@ footer p {
   align-items: center;
   gap: 0.5em;
   flex-wrap: wrap;
+}
+
+/* ============================
+  Accessibility: Reduced Motion Preference
+============================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }
