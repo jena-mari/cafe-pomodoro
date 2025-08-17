@@ -28,6 +28,7 @@
 
 - **Backend:**  
   - JavaScript (client-side logic only)
+  - Vercel for Deployment
 
 - **Data Storage:**  
   - LocalStorage for lightweight, persistent data on the browser
