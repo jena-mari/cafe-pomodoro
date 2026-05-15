@@ -1,3 +1,32 @@
+# Cafe Pomodoro (React + Vite + Tailwind)
+
+Quick scaffold to run the Cafe Pomodoro React app locally.
+
+Install and run:
+
+```bash
+npm install
+npm run dev
+```
+
+Notes:
+- Fonts are loaded from `/fonts` (keep the existing font files in that folder).
+- Logos and `alarm_sound.wav` are referenced from `/components`.
+- Update the color tokens in `src/styles.css` to fine-tune themes.
+
+Build & preview production bundle:
+
+```bash
+npm run build
+npm run preview
+```
+
+Summary of changes:
+- Rebuilt app in React + Vite + Tailwind.
+- Implemented `Timer` with alarm, persistence, and accessibility improvements (`src/components/Timer.jsx`).
+- Implemented `TodoList` with localStorage persistence (`src/components/TodoList.jsx`).
+- Added theme palettes, fonts, and refined styles in `src/styles.css`.
+
 # ☕ Café Pomodoro *₊˚୧
 
 **Café Pomodoro** is a customizable Pomodoro timer paired with a built-in to-do list — perfect for anyone looking to manage tasks effectively while enjoying a cozy, cafe-inspired atmosphere. Personalize your experience by theming your timer based on your favorite café drinks!

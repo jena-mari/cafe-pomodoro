@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face{
+  font-family: 'Denton Condensed';
+  src: url('/fonts/DentonCondensedTest-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face{
+  font-family: 'Denton Condensed';
+  src: url('/fonts/DentonCondensedTest-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face{
+  font-family: 'Urbanist';
+  src: url('/fonts/Urbanist-VariableFont_wght.ttf') format('truetype');
+}
+
+:root{
+  --bg: #3b2b23;
+  --text: #efe8df;
+  --card: #efe8df;
+  --panel: #efe8df;
+  --accent: #39221b;
+  --muted: #e8e1da;
+}
+
+.theme-coffee{ --bg:#3C2415; --text:#DDD9CE; --card:#DDD9CE; --panel:#DDD9CE; --accent:#3C2415; --muted:#EDEBE8 }
+.theme-matcha{ --bg:#606C38; --text:#F8EFDA; --card:#F8EFDA; --panel:#F8EFDA; --accent:#606C38; --muted:#F6F2DF }
+.theme-choco-berry{ --bg:#3E2723; --text:#F4C9D6; --card:#F4C9D6; --panel:#F4C9D6; --accent:#3E2723; --muted:#F8E6EA }
+.theme-blue-lemon{ --bg:#0D3B66; --text:#FAF0CA; --card:#FAF0CA; --panel:#FAF0CA; --accent:#0D3B66; --muted:#FBF6D9 }
+.theme-ube{ --bg:#36255C; --text:#E1DAF4; --card:#E1DAF4; --panel:#E1DAF4; --accent:#36255C; --muted:#EFEAFB }
+
+body{ font-family: 'Urbanist', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial }
+
+/* Card and layout refinements */
+.rounded-xl { border-radius: 1rem; }
+.card { background-color: var(--panel); padding: 2rem; border-radius: 1rem; box-shadow: none; }
+
+/* Timer number style */
+.timer-number { font-family: 'Denton Condensed', serif; font-size: 6rem; line-height: 1; color: var(--accent); font-weight: 700; }
+
+/* Subtle pulsing when running */
+.timer-running { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse{
+  0%{ transform: scale(1); }
+  50%{ transform: scale(1.02); }
+  100%{ transform: scale(1); }
+}
+
+/* Buttons */
+.btn { padding: .6rem 1rem; border-radius: .6rem; }
+.btn-accent { background-color: var(--accent); color: white; }
+.btn-muted { background-color: rgba(0,0,0,0.06); }
+
+/* Todo list tweaks */
+.todo-input { background: rgba(0,0,0,0.04); padding: .6rem; border-radius: .5rem; }
+
+/* Disable shadows globally for components that used them */
+.shadow-lg { box-shadow: none !important; }
+button, input, select, textarea { box-shadow: none !important; }
+.btn, .card, .todo-input { box-shadow: none !important; }
+

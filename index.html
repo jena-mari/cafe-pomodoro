@@ -1,118 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="pomodoro-style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="icon" type="image/png" href="./coffee-icon.png" />
-  <title>cafe pomodoro ⋆.˚☕︎</title>
-</head>
-<body>
-  <div class="page-wrapper">
-    <div class="timer-container">
-
-      <!-- Mode buttons -->
-      <nav class="mode-buttons" aria-label="Timer modes">
-        <button id="pomodoroBtn" class="active">pomodoro</button>
-        <button id="shortBreakBtn">short break</button>
-        <button id="longBreakBtn">long break</button>
-      </nav>
-
-      <!-- Timer -->
-      <div class="time-display" id="time" role="timer" aria-live="polite">25:00</div>
-
-      <!-- Controls -->
-      <div class="control-row">
-        <button class="control-icon" aria-label="Open settings" onclick="openSettings()">
-          <i class="fa-solid fa-gear"></i>
-        </button>
-        <button id="start-timer">start timer!</button>
-        <button class="control-icon" aria-label="Reset timer" onclick="resetTimer()">
-          <i class="fa-solid fa-rotate"></i>
-        </button>
-      </div>
-
-      <!-- Intervals -->
-      <div class="interval-row">
-        <div class="interval-counter">
-          intervals completed: <span id="intervalCount">1</span>
-          <button id="resetIntervals" class="reset-btn">reset</button>
-        </div>
-      </div>
-
-      <!-- To-Do List -->
-      <section class="todo-container" aria-labelledby="todo-title">
-        <h2 id="todo-title" class="todo-title">your to-do list...</h2>
-        <ol id="todo-task-list" class="todo-list"></ol>
-        <div class="todo-row add-task">
-          <button class="todo-add" id="addTaskBtn" aria-label="Add new task">
-            <i class="fa-solid fa-plus"></i> add task
-          </button>
-        </div>
-      </section>
-    </div>
-
-    <!-- Settings Panel -->
-    <aside class="settings-panel" id="settingsPanel" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-      <h2 id="settings-title"><i class="fa-solid fa-gear"></i> settings</h2>
-
-      <div class="section">
-        <h3>change theme:</h3>
-        <div class="theme-options">
-          <div class="theme-item">
-            <button class="theme-btn active" data-theme="coffee" style="color: #73411f;" aria-label="Coffee theme"></button>
-            <span class="theme-label" style="color: #73411f;">coffee</span>
-          </div>
-          <div class="theme-item">
-            <button class="theme-btn" data-theme="matcha" style="color: #606c38;" aria-label="Matcha theme"></button>
-            <span class="theme-label" style="color: #606c38;">matcha</span>
-          </div>
-          <div class="theme-item">
-            <button class="theme-btn" data-theme="ube" style="color: #5e4075;" aria-label="Ube theme"></button>
-            <span class="theme-label" style="color: #5e4075;">ube</span>
-          </div>
-          <div class="theme-item">
-            <button class="theme-btn" data-theme="citrus" style="color: #eb9b00;" aria-label="Citrus theme"></button>
-            <span class="theme-label" style="color: #eb9b00;">citrus</span>
-          </div>
-          <div class="theme-item">
-            <button class="theme-btn" data-theme="berry" style="color: #dd4470;" aria-label="Berry theme"></button>
-            <span class="theme-label" style="color: #dd4470;">berry</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h3>timer:</h3>
-        <div class="timer-inputs">
-          <label for="pomodoroInput">pomodoro <input type="number" id="pomodoroInput" value="25" min="1" /> minutes</label>
-          <label for="shortBreakInput">short break <input type="number" id="shortBreakInput" value="5" min="1" /> minutes</label>
-          <label for="longBreakInput">long break <input type="number" id="longBreakInput" value="15" min="1" /> minutes</label>
-        </div>
-      </div>
-
-      <div class="settings-buttons">
-        <button id="resetBtn">reset all</button>
-        <button id="closeSettings">close</button>
-        <button id="saveBtn">save changes</button>
-      </div>
-    </aside>
-  </div>
-
-  <!-- Footer -->
-  <footer style="margin-top: 2rem; text-align: center;">
-    <p>
-      Created by Jena Bathan
-      <a href="mailto:jenamaribathan@gmail.com" style="margin-left: 10px;">
-        <i class="fa-solid fa-envelope"></i> jenamaribathan@gmail.com
-      </a>
-      <a href="https://github.com/jena-mari" style="margin-left: 10px;">
-        <i class="fab fa-github"></i> jena-mari
-      </a>
-    </p>
-  </footer>
-
-  <script src="pomodoro-script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cafe Pomodoro</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
