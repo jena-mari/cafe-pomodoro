@@ -1,82 +1,132 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
-const presets = {
-  Pomodoro: 25 * 60,
-  'Short Break': 5 * 60,
-  'Long Break': 15 * 60
-}
+const modes = ['Pomodoro', 'Short Break', 'Long Break']
 
-export default function Timer(){
+export default function Timer({ durations, onOpenSettings }) {
   const [mode, setMode] = useState('Pomodoro')
-  const [timeLeft, setTimeLeft] = useState(presets[mode])
+  const [timeLeft, setTimeLeft] = useState((durations?.[mode] ?? 25) * 60)
   const [running, setRunning] = useState(false)
+  const [intervals, setIntervals] = useState(0)
   const audioRef = useRef(null)
 
-  // Load persisted timer state on mount
-  useEffect(()=>{
-    try{
+  // Restore timer state from localStorage on mount
+  useEffect(() => {
+    try {
       const raw = localStorage.getItem('cafe-timer')
-      if(raw){
+      if (raw) {
         const data = JSON.parse(raw)
-        if(data.mode) setMode(data.mode)
-        if(typeof data.timeLeft === 'number') setTimeLeft(data.timeLeft)
-        if(typeof data.running === 'boolean') setRunning(!!data.running)
+        if (data.mode) setMode(data.mode)
+        if (typeof data.timeLeft === 'number') setTimeLeft(data.timeLeft)
+        if (typeof data.running === 'boolean') setRunning(!!data.running)
+        if (typeof data.intervals === 'number') setIntervals(data.intervals)
       }
-    }catch(e){ }
-  },[])
+    } catch {
+      // ignore malformed data
+    }
+  }, [])
 
   // Persist timer state
-  useEffect(()=>{
-    const payload = { mode, timeLeft, running }
-    localStorage.setItem('cafe-timer', JSON.stringify(payload))
-  },[mode, timeLeft, running])
+  useEffect(() => {
+    localStorage.setItem('cafe-timer', JSON.stringify({ mode, timeLeft, running, intervals }))
+  }, [mode, timeLeft, running, intervals])
 
-  // Reset time when mode changes (unless a persisted time exists for that mode)
-  useEffect(()=>{
-    setTimeLeft(presets[mode])
+  // Reset timer when mode or durations change
+  useEffect(() => {
+    setTimeLeft((durations?.[mode] ?? 25) * 60)
     setRunning(false)
-  },[mode])
+  }, [mode, durations])
 
-  useEffect(()=>{
-    if(!running) return
-    const id = setInterval(()=>{
+  // Countdown tick
+  useEffect(() => {
+    if (!running) return
+    const id = setInterval(() => {
       setTimeLeft(t => {
-        if(t <= 1){
+        if (t <= 1) {
           setRunning(false)
+          setIntervals(prev => prev + 1)
           audioRef.current?.play()
           return 0
         }
-        return t-1
+        return t - 1
       })
     }, 1000)
-    return ()=> clearInterval(id)
-  },[running])
+    return () => clearInterval(id)
+  }, [running])
 
   const format = s => {
-    const mm = Math.floor(s/60).toString().padStart(2,'0')
-    const ss = Math.floor(s%60).toString().padStart(2,'0')
+    const mm = Math.floor(s / 60).toString().padStart(2, '0')
+    const ss = Math.floor(s % 60).toString().padStart(2, '0')
     return `${mm}:${ss}`
   }
 
   return (
-    <section className="card" aria-label="Pomodoro Timer">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex gap-2">
-          {Object.keys(presets).map(k=> (
-            <button key={k} onClick={()=>setMode(k)} aria-pressed={mode===k} className={`px-3 py-1 rounded-full ${mode===k? 'bg-[color:var(--accent)] text-white':'bg-[color:var(--muted)]'}`}>
-              {k}
+    <section className="timer-card animate-card" aria-label="Pomodoro Timer">
+      <div className="timer-header mb-6">
+        <div className="timer-modes">
+          {modes.map(item => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setMode(item)}
+              className={`mode-btn ${mode === item ? 'mode-btn-active' : ''}`}
+            >
+              {item}
             </button>
           ))}
         </div>
-        <div className="text-sm opacity-80" aria-hidden>{mode}</div>
       </div>
 
       <div className="text-center">
-        <div className={`timer-number font-denton mb-4 ${running? 'timer-running':''}`} role="timer" aria-live="polite">{format(timeLeft)}</div>
-        <div className="flex items-center justify-center gap-4">
-          <button onClick={()=>setRunning(r=>!r)} aria-label={running? 'Pause timer':'Start timer'} className={`btn btn-accent`}>{running? 'Pause':'Start'}</button>
-          <button onClick={()=>{setRunning(false); setTimeLeft(presets[mode])}} aria-label="Reset timer" className="btn btn-muted">Reset</button>
+        <div
+          className={`timer-number ${running ? 'timer-running' : ''}`}
+          role="timer"
+          aria-live="polite"
+        >
+          {format(timeLeft)}
         </div>
+
+        <div className="timer-actions mt-8 flex items-center justify-center gap-4 flex-wrap">
+          {/* Settings gear */}
+          <button
+            type="button"
+            className="icon-btn settings-icon"
+            onClick={onOpenSettings}
+            aria-label="Open settings"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 15.5C13.933 15.5 15.5 13.933 15.5 12C15.5 10.067 13.933 8.5 12 8.5C10.067 8.5 8.5 10.067 8.5 12C8.5 13.933 10.067 15.5 12 15.5Z" stroke="currentColor" strokeWidth="1.8"/>
+              <path d="M19.4 12C19.4 12.58 19.34 13.16 19.22 13.72L21.5 15.4L19.88 18.12L17.24 17.1C16.6 17.58 15.89 17.94 15.11 18.18L14.58 20.96H9.42L8.89 18.18C8.11 17.94 7.4 17.58 6.76 17.1L4.12 18.12L2.5 15.4L4.78 13.72C4.66 13.16 4.6 12.58 4.6 12C4.6 11.42 4.66 10.84 4.78 10.28L2.5 8.6L4.12 5.88L6.76 6.9C7.4 6.42 8.11 6.06 8.89 5.82L9.42 3.04H14.58L15.11 5.82C15.89 6.06 16.6 6.42 17.24 6.9L19.88 5.88L21.5 8.6L19.22 10.28C19.34 10.84 19.4 11.42 19.4 12Z" stroke="currentColor" strokeWidth="1.8"/>
+            </svg>
+          </button>
+
+          {/* Start / Pause */}
+          <button
+            type="button"
+            onClick={() => setRunning(r => !r)}
+            className="start-btn"
+            aria-label={running ? 'Pause timer' : 'Start timer'}
+          >
+            {running ? 'Pause' : 'Start'}
+          </button>
+
+          {/* Reset */}
+          <button
+            type="button"
+            onClick={() => {
+              setRunning(false)
+              setTimeLeft((durations?.[mode] ?? 25) * 60)
+            }}
+            className="icon-btn"
+            aria-label="Reset timer"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.5 8C8.88 6.64 10.87 5.75 13 5.75C17.22 5.75 20.75 9.28 20.75 13.5C20.75 17.72 17.22 21.25 13 21.25C9.01 21.25 5.68 18.39 5.18 14.56" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+              <path d="M5.5 4.5V8H9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div className="interval-text">intervals completed: {intervals}</div>
       </div>
 
       <audio ref={audioRef} src="/components/alarm_sound.wav" preload="auto" />
