@@ -8,6 +8,7 @@ const FOOTER_CONFIG = {
   links: [
     { label: 'github',    href: 'https://github.com/jena-mari' },
     { label: 'portfolio', href: 'https://jena-portfolio-xi.vercel.app/' },
+    { label: 'linkedin', href: 'https://www.linkedin.com/in/jenabathan/' }
   ],
 }
 
