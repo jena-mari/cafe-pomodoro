@@ -21,18 +21,9 @@ function loadSettings() {
 }
 
 export default function App() {
-  const [theme, setTheme] = useState('coffee')
-  const [durations, setDurations] = useState(defaultDurations)
+  const [theme, setTheme] = useState(() => loadSettings()?.theme || 'coffee')
+  const [durations, setDurations] = useState(() => loadSettings()?.durations || defaultDurations)
   const [settingsOpen, setSettingsOpen] = useState(false)
-
-  // Restore persisted settings on mount
-  useEffect(() => {
-    const saved = loadSettings()
-    if (saved) {
-      setTheme(saved.theme || 'coffee')
-      setDurations(saved.durations || defaultDurations)
-    }
-  }, [])
 
   // Persist whenever settings change
   useEffect(() => {

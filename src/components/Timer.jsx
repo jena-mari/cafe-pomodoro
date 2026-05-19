@@ -1,60 +1,203 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSounds } from './useSounds'
 
 const modes = ['Pomodoro', 'Short Break', 'Long Break']
+const TIMER_STORAGE_KEY = 'cafe-timer'
+
+function loadSavedTimer() {
+  try {
+    const raw = localStorage.getItem(TIMER_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
+function getDurationSeconds(durations, mode) {
+  return Math.max(1, Math.round((durations?.[mode] ?? 25) * 60))
+}
+
+function getRemainingSeconds(endAt) {
+  return Math.max(0, Math.ceil((endAt - Date.now()) / 1000))
+}
+
+function createTimerWorker() {
+  if (typeof Worker === 'undefined' || typeof Blob === 'undefined') return null
+
+  const source = `
+    let intervalId = null;
+    let endAt = null;
+
+    function remainingSeconds() {
+      return Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+    }
+
+    function stop() {
+      if (intervalId) clearInterval(intervalId);
+      intervalId = null;
+      endAt = null;
+    }
+
+    function tick() {
+      if (!endAt) return;
+      const timeLeft = remainingSeconds();
+      postMessage({ type: 'tick', timeLeft });
+      if (timeLeft <= 0) {
+        stop();
+        postMessage({ type: 'done' });
+      }
+    }
+
+    onmessage = (event) => {
+      if (event.data?.type === 'start') {
+        stop();
+        endAt = event.data.endAt;
+        tick();
+        intervalId = setInterval(tick, 500);
+      }
+
+      if (event.data?.type === 'stop') {
+        stop();
+      }
+    };
+  `
+
+  try {
+    const url = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }))
+    const worker = new Worker(url)
+    return { worker, url }
+  } catch {
+    return null
+  }
+}
+
+function requestNotificationPermission() {
+  if (!('Notification' in window) || Notification.permission !== 'default') return
+
+  try {
+    const request = Notification.requestPermission()
+    if (request?.catch) request.catch(() => {})
+  } catch {
+    // Older browser implementations can expose a different permission API.
+  }
+}
+
+function showTimerNotification(mode) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return
+
+  try {
+    new Notification(`${mode} complete`, {
+      body: 'Time is up.',
+      tag: 'cafe-pomodoro-timer',
+      requireInteraction: true,
+    })
+  } catch {
+    // Notifications can fail in unsupported browser/privacy contexts.
+  }
+}
 
 export default function Timer({ durations, onOpenSettings }) {
-  const [mode, setMode] = useState('Pomodoro')
-  const [timeLeft, setTimeLeft] = useState((durations?.[mode] ?? 25) * 60)
-  const [running, setRunning] = useState(false)
-  const [intervals, setIntervals] = useState(0)
-  const audioRef = useRef(null)
+  const savedTimer = useMemo(loadSavedTimer, [])
+  const savedMode = modes.includes(savedTimer?.mode) ? savedTimer.mode : 'Pomodoro'
+  const savedEndAt = typeof savedTimer?.endAt === 'number' ? savedTimer.endAt : null
+  const savedTimeLeft = typeof savedTimer?.timeLeft === 'number' ? savedTimer.timeLeft : null
+  const savedStillRunning = savedTimer?.running && savedEndAt && savedEndAt > Date.now()
 
-  const { playAlarm, playClick, playToggle } = useSounds()
+  const [mode, setMode] = useState(savedMode)
+  const durationSeconds = getDurationSeconds(durations, mode)
+  const [timeLeft, setTimeLeft] = useState(() => {
+    if (savedStillRunning) return getRemainingSeconds(savedEndAt)
+    return savedTimeLeft ?? getDurationSeconds(durations, savedMode)
+  })
+  const [running, setRunning] = useState(() => Boolean(savedStillRunning))
+  const [endAt, setEndAt] = useState(() => (savedStillRunning ? savedEndAt : null))
+  const [intervals, setIntervals] = useState(() => {
+    return typeof savedTimer?.intervals === 'number' ? savedTimer.intervals : 0
+  })
+  const completionHandledRef = useRef(false)
+  const didMountRef = useRef(false)
 
-  // Restore timer state from localStorage on mount
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('cafe-timer')
-      if (raw) {
-        const data = JSON.parse(raw)
-        if (data.mode) setMode(data.mode)
-        if (typeof data.timeLeft === 'number') setTimeLeft(data.timeLeft)
-        if (typeof data.running === 'boolean') setRunning(!!data.running)
-        if (typeof data.intervals === 'number') setIntervals(data.intervals)
-      }
-    } catch {
-      // ignore malformed data
-    }
-  }, [])
+  const { playAlarm, playClick, playToggle, unlockSounds } = useSounds()
 
   // Persist timer state
   useEffect(() => {
-    localStorage.setItem('cafe-timer', JSON.stringify({ mode, timeLeft, running, intervals }))
-  }, [mode, timeLeft, running, intervals])
+    localStorage.setItem(TIMER_STORAGE_KEY, JSON.stringify({ mode, timeLeft, running, endAt, intervals }))
+  }, [mode, timeLeft, running, endAt, intervals])
 
   // Reset timer when mode or durations change
   useEffect(() => {
-    setTimeLeft((durations?.[mode] ?? 25) * 60)
+    if (!didMountRef.current) {
+      didMountRef.current = true
+      return
+    }
+
+    completionHandledRef.current = false
     setRunning(false)
-  }, [mode, durations])
+    setEndAt(null)
+    setTimeLeft(durationSeconds)
+  }, [mode, durationSeconds])
+
+  const completeTimer = useCallback(() => {
+    if (completionHandledRef.current) return
+
+    completionHandledRef.current = true
+    setRunning(false)
+    setEndAt(null)
+    setTimeLeft(0)
+    setIntervals(prev => prev + 1)
+    playAlarm()
+    showTimerNotification(mode)
+  }, [mode, playAlarm])
 
   // Countdown tick
   useEffect(() => {
-    if (!running) return
-    const id = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) {
-          setRunning(false)
-          setIntervals(prev => prev + 1)
-          playAlarm()
-          return 0
+    if (!running || !endAt) return
+
+    let stopped = false
+    const workerTimer = createTimerWorker()
+
+    const syncFromClock = () => {
+      const nextTimeLeft = getRemainingSeconds(endAt)
+      setTimeLeft(nextTimeLeft)
+      if (nextTimeLeft <= 0) completeTimer()
+    }
+
+    if (workerTimer) {
+      workerTimer.worker.onmessage = (event) => {
+        if (stopped) return
+
+        if (event.data?.type === 'tick') {
+          setTimeLeft(event.data.timeLeft)
         }
-        return t - 1
-      })
-    }, 1000)
-    return () => clearInterval(id)
-  }, [running])
+
+        if (event.data?.type === 'done') {
+          completeTimer()
+        }
+      }
+      workerTimer.worker.postMessage({ type: 'start', endAt })
+    }
+
+    const fallbackId = workerTimer ? null : window.setInterval(syncFromClock, 500)
+
+    const handleResume = () => syncFromClock()
+    document.addEventListener('visibilitychange', handleResume)
+    window.addEventListener('focus', handleResume)
+    window.addEventListener('pageshow', handleResume)
+    syncFromClock()
+
+    return () => {
+      stopped = true
+      if (fallbackId) window.clearInterval(fallbackId)
+      if (workerTimer) {
+        workerTimer.worker.postMessage({ type: 'stop' })
+        workerTimer.worker.terminate()
+        URL.revokeObjectURL(workerTimer.url)
+      }
+      document.removeEventListener('visibilitychange', handleResume)
+      window.removeEventListener('focus', handleResume)
+      window.removeEventListener('pageshow', handleResume)
+    }
+  }, [running, endAt, completeTimer])
 
   const format = s => {
     const mm = Math.floor(s / 60).toString().padStart(2, '0')
@@ -64,13 +207,29 @@ export default function Timer({ durations, onOpenSettings }) {
 
   const handleStartPause = () => {
     playClick()
-    setRunning(r => !r)
+    if (running) {
+      const nextTimeLeft = endAt ? getRemainingSeconds(endAt) : timeLeft
+      setTimeLeft(nextTimeLeft)
+      setEndAt(null)
+      setRunning(false)
+      return
+    }
+
+    const nextTimeLeft = timeLeft > 0 ? timeLeft : durationSeconds
+    completionHandledRef.current = false
+    unlockSounds()
+    requestNotificationPermission()
+    setTimeLeft(nextTimeLeft)
+    setEndAt(Date.now() + nextTimeLeft * 1000)
+    setRunning(true)
   }
 
   const handleReset = () => {
     playToggle()
+    completionHandledRef.current = false
     setRunning(false)
-    setTimeLeft((durations?.[mode] ?? 25) * 60)
+    setEndAt(null)
+    setTimeLeft(durationSeconds)
   }
 
   const handleModeChange = (item) => {
@@ -216,9 +375,6 @@ export default function Timer({ durations, onOpenSettings }) {
             </button>
           </div>
         </div>
-
-        {/* alarm_sound.wav is in /public */}
-        <audio ref={audioRef} src="/alarm_sound.wav" preload="auto" />
       </section>
     </>
   )

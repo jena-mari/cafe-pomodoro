@@ -25,10 +25,45 @@ export function useSounds() {
     }
   }, [])
 
+  const unlock = useCallback(() => {
+    ;[alarm, click, success, toggle].forEach((ref) => {
+      try {
+        const audio = ref.current
+        const previousVolume = audio.volume
+        audio.volume = 0
+        audio.currentTime = 0
+        const attempt = audio.play()
+        if (attempt?.then) {
+          attempt
+            .then(() => {
+              audio.pause()
+              audio.currentTime = 0
+              audio.volume = previousVolume
+            })
+            .catch(() => {
+              audio.volume = previousVolume
+            })
+        } else {
+          audio.pause()
+          audio.currentTime = 0
+          audio.volume = previousVolume
+        }
+      } catch {
+        // Some browsers only allow this after a user gesture.
+      }
+    })
+  }, [])
+
+  const playAlarm = useCallback(() => play(alarm), [play])
+  const playClick = useCallback(() => play(click), [play])
+  const playSuccess = useCallback(() => play(success), [play])
+  const playToggle = useCallback(() => play(toggle), [play])
+
   return {
-    playAlarm:   () => play(alarm),
-    playClick:   () => play(click),
-    playSuccess: () => play(success),
-    playToggle:  () => play(toggle),
+    playAlarm,
+    playClick,
+    playSuccess,
+    playToggle,
+    unlockSounds: unlock,
   }
 }
