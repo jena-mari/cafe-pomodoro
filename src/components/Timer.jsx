@@ -96,7 +96,12 @@ function showTimerNotification(mode) {
   }
 }
 
-export default function Timer({ durations, onOpenSettings }) {
+export default function Timer({
+  durations,
+  longBreakInterval = 4,
+  autoSwitchEnabled = true,
+  onOpenSettings,
+}) {
   const savedTimer = useMemo(loadSavedTimer, [])
   const savedMode = modes.includes(savedTimer?.mode) ? savedTimer.mode : 'Pomodoro'
   const savedEndAt = typeof savedTimer?.endAt === 'number' ? savedTimer.endAt : null
@@ -140,14 +145,30 @@ export default function Timer({ durations, onOpenSettings }) {
   const completeTimer = useCallback(() => {
     if (completionHandledRef.current) return
 
+    const completedPomodoros = mode === 'Pomodoro' ? intervals + 1 : intervals
+    const safeLongBreakInterval = Math.max(1, Math.round(longBreakInterval) || 4)
+    const nextMode = mode === 'Pomodoro'
+      ? completedPomodoros % safeLongBreakInterval === 0
+        ? 'Long Break'
+        : 'Short Break'
+      : 'Pomodoro'
+
     completionHandledRef.current = true
     setRunning(false)
     setEndAt(null)
-    setTimeLeft(0)
-    setIntervals(prev => prev + 1)
+    setTimeLeft(autoSwitchEnabled ? getDurationSeconds(durations, nextMode) : 0)
+
+    if (mode === 'Pomodoro') {
+      setIntervals(completedPomodoros)
+    }
+
+    if (autoSwitchEnabled) {
+      setMode(nextMode)
+    }
+
     playAlarm()
     showTimerNotification(mode)
-  }, [mode, playAlarm])
+  }, [autoSwitchEnabled, durations, intervals, longBreakInterval, mode, playAlarm])
 
   // Countdown tick
   useEffect(() => {
@@ -234,6 +255,10 @@ export default function Timer({ durations, onOpenSettings }) {
 
   const handleModeChange = (item) => {
     playToggle()
+    completionHandledRef.current = false
+    setRunning(false)
+    setEndAt(null)
+    setTimeLeft(getDurationSeconds(durations, item))
     setMode(item)
   }
 

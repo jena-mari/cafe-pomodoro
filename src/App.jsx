@@ -10,6 +10,11 @@ const defaultDurations = {
   'Long Break': 15,
 }
 
+const defaultTimerSettings = {
+  longBreakInterval: 4,
+  autoSwitchEnabled: true,
+}
+
 function loadSettings() {
   try {
     const raw = localStorage.getItem('cafe-settings')
@@ -21,14 +26,30 @@ function loadSettings() {
 }
 
 export default function App() {
-  const [theme, setTheme] = useState(() => loadSettings()?.theme || 'coffee')
-  const [durations, setDurations] = useState(() => loadSettings()?.durations || defaultDurations)
+  const savedSettings = loadSettings()
+  const [theme, setTheme] = useState(() => savedSettings?.theme || 'coffee')
+  const [durations, setDurations] = useState(() => savedSettings?.durations || defaultDurations)
+  const [longBreakInterval, setLongBreakInterval] = useState(() => {
+    if (!Number.isFinite(savedSettings?.longBreakInterval)) {
+      return defaultTimerSettings.longBreakInterval
+    }
+
+    return Math.max(1, Math.round(savedSettings.longBreakInterval))
+  })
+  const [autoSwitchEnabled, setAutoSwitchEnabled] = useState(() => {
+    return typeof savedSettings?.autoSwitchEnabled === 'boolean'
+      ? savedSettings.autoSwitchEnabled
+      : defaultTimerSettings.autoSwitchEnabled
+  })
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   // Persist whenever settings change
   useEffect(() => {
-    localStorage.setItem('cafe-settings', JSON.stringify({ theme, durations }))
-  }, [theme, durations])
+    localStorage.setItem(
+      'cafe-settings',
+      JSON.stringify({ theme, durations, longBreakInterval, autoSwitchEnabled })
+    )
+  }, [theme, durations, longBreakInterval, autoSwitchEnabled])
 
   // Apply theme class to <html> so all CSS variable rules in styles.css take effect
   useEffect(() => {
@@ -39,9 +60,16 @@ export default function App() {
     document.documentElement.classList.add(`theme-${theme}`)
   }, [theme])
 
-  const handleSave = ({ durations: newDurations, theme: newTheme }) => {
+  const handleSave = ({
+    durations: newDurations,
+    theme: newTheme,
+    longBreakInterval: newLongBreakInterval,
+    autoSwitchEnabled: newAutoSwitchEnabled,
+  }) => {
     setDurations(newDurations)
     setTheme(newTheme)
+    setLongBreakInterval(newLongBreakInterval)
+    setAutoSwitchEnabled(newAutoSwitchEnabled)
     setSettingsOpen(false)
   }
 
@@ -49,7 +77,12 @@ export default function App() {
     <div className="app-root">
       <main className="page-container">
         <section className="page-screen">
-          <Timer durations={durations} onOpenSettings={() => setSettingsOpen(true)} />
+          <Timer
+            durations={durations}
+            longBreakInterval={longBreakInterval}
+            autoSwitchEnabled={autoSwitchEnabled}
+            onOpenSettings={() => setSettingsOpen(true)}
+          />
           <div className="scroll-guide">Scroll down to manage your tasks</div>
         </section>
         <section className="page-screen">
@@ -61,6 +94,8 @@ export default function App() {
       {settingsOpen && (
         <Settings
           durations={durations}
+          longBreakInterval={longBreakInterval}
+          autoSwitchEnabled={autoSwitchEnabled}
           onSave={handleSave}
           onClose={() => setSettingsOpen(false)}
         />

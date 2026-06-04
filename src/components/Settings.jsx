@@ -9,8 +9,16 @@ const themes = [
   { key: 'ube',         label: 'ube',           img: '/ube.png' },
 ]
 
-export default function Settings({ durations, onSave, onClose }) {
+export default function Settings({
+  durations,
+  longBreakInterval,
+  autoSwitchEnabled,
+  onSave,
+  onClose,
+}) {
   const [localDurations, setLocalDurations] = useState({ ...durations })
+  const [localLongBreakInterval, setLocalLongBreakInterval] = useState(longBreakInterval)
+  const [localAutoSwitchEnabled, setLocalAutoSwitchEnabled] = useState(autoSwitchEnabled)
   const [selectedTheme, setSelectedTheme] = useState(
     () => localStorage.getItem('selectedTheme') || 'coffee'
   )
@@ -21,16 +29,27 @@ export default function Settings({ durations, onSave, onClose }) {
     setLocalDurations(prev => ({ ...prev, [key]: Number(value) || 0 }))
   }
 
+  const handleLongBreakIntervalChange = (value) => {
+    setLocalLongBreakInterval(Math.max(1, Number(value) || 1))
+  }
+
   const handleReset = () => {
     playToggle()
     setLocalDurations({ Pomodoro: 25, 'Short Break': 5, 'Long Break': 15 })
+    setLocalLongBreakInterval(4)
+    setLocalAutoSwitchEnabled(true)
     setSelectedTheme('coffee')
   }
 
   const handleSave = () => {
     playSuccess()
     localStorage.setItem('selectedTheme', selectedTheme)
-    onSave({ durations: localDurations, theme: selectedTheme })
+    onSave({
+      durations: localDurations,
+      theme: selectedTheme,
+      longBreakInterval: Math.max(1, Math.round(localLongBreakInterval) || 4),
+      autoSwitchEnabled: localAutoSwitchEnabled,
+    })
   }
 
   const handleClose = () => {
@@ -190,6 +209,50 @@ export default function Settings({ durations, onSave, onClose }) {
           box-shadow: none !important;
         }
 
+        .s-toggle {
+          display: inline-flex;
+          align-items: center;
+          cursor: pointer;
+        }
+
+        .s-toggle input {
+          position: absolute;
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .s-toggle-track {
+          width: 3.25rem;
+          height: 1.75rem;
+          border: 2px solid var(--accent);
+          border-radius: 999px;
+          background: var(--card);
+          position: relative;
+          transition: background 150ms ease;
+        }
+
+        .s-toggle-track::after {
+          content: '';
+          position: absolute;
+          width: 1.05rem;
+          height: 1.05rem;
+          border-radius: 50%;
+          top: 50%;
+          left: 0.25rem;
+          transform: translateY(-50%);
+          background: var(--accent);
+          transition: left 150ms ease;
+        }
+
+        .s-toggle input:checked + .s-toggle-track {
+          background: var(--accent);
+        }
+
+        .s-toggle input:checked + .s-toggle-track::after {
+          left: 1.65rem;
+          background: var(--card);
+        }
+
         .s-actions {
           display: flex;
           justify-content: space-between;
@@ -261,6 +324,35 @@ export default function Settings({ durations, onSave, onClose }) {
                 />
               </div>
             ))}
+
+            <div className="s-timer-row">
+              <span className="s-timer-label">long break every</span>
+              <input
+                type="number"
+                className="s-timer-input"
+                min="1"
+                max="20"
+                value={localLongBreakInterval}
+                onChange={e => handleLongBreakIntervalChange(e.target.value)}
+                aria-label="Pomodoros before a long break"
+              />
+            </div>
+
+            <div className="s-timer-row">
+              <span className="s-timer-label">auto switch</span>
+              <label className="s-toggle">
+                <input
+                  type="checkbox"
+                  checked={localAutoSwitchEnabled}
+                  onChange={e => {
+                    playToggle()
+                    setLocalAutoSwitchEnabled(e.target.checked)
+                  }}
+                  aria-label="Enable automatic timer mode switching"
+                />
+                <span className="s-toggle-track" aria-hidden="true" />
+              </label>
+            </div>
           </div>
 
           <div className="s-actions">
